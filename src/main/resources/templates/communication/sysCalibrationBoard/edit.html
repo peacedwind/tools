@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改板卡校正系数信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sysCalibrationBoard-edit" th:object="${sysCalibrationBoard}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采集单元ID：</label>
+                <div class="col-sm-8">
+                    <input name="unitId" th:field="*{unitId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">板卡号：</label>
+                <div class="col-sm-8">
+                    <input name="boardNum" th:field="*{boardNum}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道号：</label>
+                <div class="col-sm-8">
+                    <input name="channelNum" th:field="*{channelNum}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道地址：</label>
+                <div class="col-sm-8">
+                    <input name="channelAddr" th:field="*{channelAddr}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道序号：</label>
+                <div class="col-sm-8">
+                    <input name="channelSort" th:field="*{channelSort}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">频率校正系数：</label>
+                <div class="col-sm-8">
+                    <input name="factorValueUu" th:field="*{factorValueUu}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">幅值校正系数：</label>
+                <div class="col-sm-8">
+                    <input name="factorValuePp" th:field="*{factorValuePp}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备用：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "communication/sysCalibrationBoard";
+        $("#form-sysCalibrationBoard-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-sysCalibrationBoard-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

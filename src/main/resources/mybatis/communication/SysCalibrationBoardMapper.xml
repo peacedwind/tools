@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.communication.mapper.SysCalibrationBoardMapper">
+    
+    <resultMap type="com.oetsky.project.communication.domain.SysCalibrationBoard" id="SysCalibrationBoardResult">
+        <result property="id"    column="id"    />
+        <result property="unitId"    column="unit_id"    />
+        <result property="unitType"    column="unit_type"    />
+        <result property="boardType"    column="board_type"    />
+        <result property="boardNum"    column="board_num"    />
+        <result property="channelNum"    column="channel_num"    />
+        <result property="channelAddr"    column="channel_addr"    />
+        <result property="channelSort"    column="channel_sort"    />
+        <result property="factorValueUu"    column="factor_value_uu"    />
+        <result property="factorValuePp"    column="factor_value_pp"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="remarkExt1"    column="remark_ext1"    />
+        <result property="remarkExt2"    column="remark_ext2"    />
+        <result property="remarkExt3"    column="remark_ext3"    />
+        <result property="remarkExt4"    column="remark_ext4"    />
+        <result property="remarkExt5"    column="remark_ext5"    />
+    </resultMap>
+
+    <sql id="selectSysCalibrationBoardVo">
+        select id, unit_id, unit_type, board_type, board_num, channel_num, channel_addr, channel_sort, factor_value_uu, factor_value_pp, create_by, create_time, update_by, update_time, remark, remark_ext1, remark_ext2, remark_ext3, remark_ext4, remark_ext5 from sys_calibration_board
+    </sql>
+
+    <select id="selectSysCalibrationBoardList" parameterType="com.oetsky.project.communication.domain.SysCalibrationBoard" resultMap="SysCalibrationBoardResult">
+        <include refid="selectSysCalibrationBoardVo"/>
+        <where>  
+            <if test="unitId != null "> and unit_id = #{unitId}</if>
+            <if test="unitType != null  and unitType != ''"> and unit_type = #{unitType}</if>
+            <if test="boardType != null  and boardType != ''"> and board_type = #{boardType}</if>
+            <if test="boardNum != null "> and board_num = #{boardNum}</if>
+            <if test="channelNum != null "> and channel_num = #{channelNum}</if>
+            <if test="channelAddr != null  and channelAddr != ''"> and channel_addr = #{channelAddr}</if>
+            <if test="channelSort != null "> and channel_sort = #{channelSort}</if>
+            <if test="factorValueUu != null  and factorValueUu != ''"> and factor_value_uu = #{factorValueUu}</if>
+            <if test="factorValuePp != null  and factorValuePp != ''"> and factor_value_pp = #{factorValuePp}</if>
+            <if test="remarkExt1 != null  and remarkExt1 != ''"> and remark_ext1 = #{remarkExt1}</if>
+            <if test="remarkExt2 != null  and remarkExt2 != ''"> and remark_ext2 = #{remarkExt2}</if>
+            <if test="remarkExt3 != null  and remarkExt3 != ''"> and remark_ext3 = #{remarkExt3}</if>
+            <if test="remarkExt4 != null  and remarkExt4 != ''"> and remark_ext4 = #{remarkExt4}</if>
+            <if test="remarkExt5 != null  and remarkExt5 != ''"> and remark_ext5 = #{remarkExt5}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysCalibrationBoardById" parameterType="Long" resultMap="SysCalibrationBoardResult">
+        <include refid="selectSysCalibrationBoardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysCalibrationBoard" parameterType="com.oetsky.project.communication.domain.SysCalibrationBoard" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_calibration_board
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitId != null">unit_id,</if>
+            <if test="unitType != null and unitType != ''">unit_type,</if>
+            <if test="boardType != null and boardType != ''">board_type,</if>
+            <if test="boardNum != null">board_num,</if>
+            <if test="channelNum != null">channel_num,</if>
+            <if test="channelAddr != null">channel_addr,</if>
+            <if test="channelSort != null">channel_sort,</if>
+            <if test="factorValueUu != null">factor_value_uu,</if>
+            <if test="factorValuePp != null">factor_value_pp,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="remarkExt1 != null">remark_ext1,</if>
+            <if test="remarkExt2 != null">remark_ext2,</if>
+            <if test="remarkExt3 != null">remark_ext3,</if>
+            <if test="remarkExt4 != null">remark_ext4,</if>
+            <if test="remarkExt5 != null">remark_ext5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="unitId != null">#{unitId},</if>
+            <if test="unitType != null and unitType != ''">#{unitType},</if>
+            <if test="boardType != null and boardType != ''">#{boardType},</if>
+            <if test="boardNum != null">#{boardNum},</if>
+            <if test="channelNum != null">#{channelNum},</if>
+            <if test="channelAddr != null">#{channelAddr},</if>
+            <if test="channelSort != null">#{channelSort},</if>
+            <if test="factorValueUu != null">#{factorValueUu},</if>
+            <if test="factorValuePp != null">#{factorValuePp},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="remarkExt1 != null">#{remarkExt1},</if>
+            <if test="remarkExt2 != null">#{remarkExt2},</if>
+            <if test="remarkExt3 != null">#{remarkExt3},</if>
+            <if test="remarkExt4 != null">#{remarkExt4},</if>
+            <if test="remarkExt5 != null">#{remarkExt5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysCalibrationBoard" parameterType="com.oetsky.project.communication.domain.SysCalibrationBoard">
+        update sys_calibration_board
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitId != null">unit_id = #{unitId},</if>
+            <if test="unitType != null and unitType != ''">unit_type = #{unitType},</if>
+            <if test="boardType != null and boardType != ''">board_type = #{boardType},</if>
+            <if test="boardNum != null">board_num = #{boardNum},</if>
+            <if test="channelNum != null">channel_num = #{channelNum},</if>
+            <if test="channelAddr != null">channel_addr = #{channelAddr},</if>
+            <if test="channelSort != null">channel_sort = #{channelSort},</if>
+            <if test="factorValueUu != null">factor_value_uu = #{factorValueUu},</if>
+            <if test="factorValuePp != null">factor_value_pp = #{factorValuePp},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="remarkExt1 != null">remark_ext1 = #{remarkExt1},</if>
+            <if test="remarkExt2 != null">remark_ext2 = #{remarkExt2},</if>
+            <if test="remarkExt3 != null">remark_ext3 = #{remarkExt3},</if>
+            <if test="remarkExt4 != null">remark_ext4 = #{remarkExt4},</if>
+            <if test="remarkExt5 != null">remark_ext5 = #{remarkExt5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCalibrationBoardById" parameterType="Long">
+        delete from sys_calibration_board where id = #{id}
+    </delete>
+
+    <delete id="deleteCalibrationByUnitBoardNum">
+        delete from sys_calibration_board where unit_id = #{unitId} and board_num = #{boardNum}
+    </delete>
+
+    <delete id="deleteSysCalibrationBoardByIds" parameterType="String">
+        delete from sys_calibration_board where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="batchSysCalibrationBoardList">
+        insert into sys_calibration_board(  unit_id , unit_type , board_type , board_num , channel_num , channel_addr , channel_sort , factor_value_uu , factor_value_pp , create_by , update_by , remark , remark_ext1 , remark_ext2 , remark_ext3 , remark_ext4 , remark_ext5 ) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (   #{item.unitId},  #{item.unitType},  #{item.boardType},  #{item.boardNum},  #{item.channelNum},  #{item.channelAddr},  #{item.channelSort},  #{item.factorValueUu},  #{item.factorValuePp},  #{item.createBy},   #{item.updateBy},  #{item.remark},  #{item.remarkExt1},  #{item.remarkExt2},  #{item.remarkExt3},  #{item.remarkExt4},  #{item.remarkExt5})
+        </foreach>
+    </insert>
+
+
+</mapper>

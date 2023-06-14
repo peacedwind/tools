@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.communication.mapper.SysUnitBoardMapper">
+    
+    <resultMap type="com.oetsky.project.communication.domain.SysUnitBoard" id="SysUnitBoardResult">
+        <result property="id"    column="id"    />
+        <result property="unitId"    column="unit_id"    />
+        <result property="unitType"    column="unit_type"    />
+        <result property="unitBoardType"    column="unit_board_type"    />
+        <result property="unitBoardNum"    column="unit_board_num"    />
+        <result property="channelNum"    column="channel_num"    />
+        <result property="hardwareVersion" column="hardware_version"/>
+        <result property="softwareVersion" column="software_version"/>
+        <result property="softwareCheckValue" column="software_check_value"/>
+        <result property="fpgaVersion" column="fpga_version"/>
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="remarkExt1"    column="remark_ext1"    />
+        <result property="remarkExt2"    column="remark_ext2"    />
+        <result property="remarkExt3"    column="remark_ext3"    />
+        <result property="remarkExt4"    column="remark_ext4"    />
+        <result property="remarkExt5"    column="remark_ext5"    />
+    </resultMap>
+
+    <sql id="selectSysUnitBoardVo">
+        select id, unit_id, unit_type, unit_board_type, unit_board_num, channel_num, hardware_version, software_version, software_check_value, fpga_version, create_by, create_time, update_by, update_time, remark, remark_ext1, remark_ext2, remark_ext3, remark_ext4, remark_ext5 from sys_unit_board
+    </sql>
+
+    <select id="selectSysUnitBoardList" parameterType="com.oetsky.project.communication.domain.SysUnitBoard" resultMap="SysUnitBoardResult">
+        <include refid="selectSysUnitBoardVo"/>
+        <where>  
+            <if test="unitId != null "> and unit_id = #{unitId}</if>
+            <if test="unitType != null  and unitType != ''"> and unit_type = #{unitType}</if>
+            <if test="unitBoardType != null  and unitBoardType != ''"> and unit_board_type = #{unitBoardType}</if>
+            <if test="unitBoardNum != null "> and unit_board_num = #{unitBoardNum}</if>
+            <if test="channelNum != null "> and channel_num = #{channelNum}</if>
+            <if test="hardwareVersion != null  and hardwareVersion != ''">and hardware_version = #{hardwareVersion}</if>
+            <if test="softwareVersion != null  and softwareVersion != ''">and software_version = #{softwareVersion}</if>
+            <if test="softwareCheckValue != null  and softwareCheckValue != ''">and software_check_value =
+                #{softwareCheckValue}
+            </if>
+            <if test="fpgaVersion != null  and fpgaVersion != ''">and fpga_version = #{fpgaVersion}</if>
+            <if test="remarkExt1 != null  and remarkExt1 != ''"> and remark_ext1 = #{remarkExt1}</if>
+            <if test="remarkExt2 != null  and remarkExt2 != ''"> and remark_ext2 = #{remarkExt2}</if>
+            <if test="remarkExt3 != null  and remarkExt3 != ''"> and remark_ext3 = #{remarkExt3}</if>
+            <if test="remarkExt4 != null  and remarkExt4 != ''"> and remark_ext4 = #{remarkExt4}</if>
+            <if test="remarkExt5 != null  and remarkExt5 != ''"> and remark_ext5 = #{remarkExt5}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUnitBoardById" parameterType="Long" resultMap="SysUnitBoardResult">
+        <include refid="selectSysUnitBoardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysUnitBoard" parameterType="com.oetsky.project.communication.domain.SysUnitBoard" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_unit_board
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitId != null">unit_id,</if>
+            <if test="unitType != null and unitType != ''">unit_type,</if>
+            <if test="unitBoardType != null and unitBoardType != ''">unit_board_type,</if>
+            <if test="unitBoardNum != null">unit_board_num,</if>
+            <if test="channelNum != null">channel_num,</if>
+            <if test="hardwareVersion != null and hardwareVersion != ''">hardware_version,</if>
+            <if test="softwareVersion != null and softwareVersion != ''">software_version,</if>
+            <if test="softwareCheckValue != null and softwareCheckValue != ''">software_check_value,</if>
+            <if test="fpgaVersion != null and fpgaVersion != ''">fpga_version,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="remarkExt1 != null">remark_ext1,</if>
+            <if test="remarkExt2 != null">remark_ext2,</if>
+            <if test="remarkExt3 != null">remark_ext3,</if>
+            <if test="remarkExt4 != null">remark_ext4,</if>
+            <if test="remarkExt5 != null">remark_ext5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="unitId != null">#{unitId},</if>
+            <if test="unitType != null and unitType != ''">#{unitType},</if>
+            <if test="unitBoardType != null and unitBoardType != ''">#{unitBoardType},</if>
+            <if test="unitBoardNum != null">#{unitBoardNum},</if>
+            <if test="channelNum != null">#{channelNum},</if>
+            <if test="hardwareVersion != null and hardwareVersion != ''">#{hardwareVersion},</if>
+            <if test="softwareVersion != null and softwareVersion != ''">#{softwareVersion},</if>
+            <if test="softwareCheckValue != null and softwareCheckValue != ''">#{softwareCheckValue},</if>
+            <if test="fpgaVersion != null and fpgaVersion != ''">#{fpgaVersion},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="remarkExt1 != null">#{remarkExt1},</if>
+            <if test="remarkExt2 != null">#{remarkExt2},</if>
+            <if test="remarkExt3 != null">#{remarkExt3},</if>
+            <if test="remarkExt4 != null">#{remarkExt4},</if>
+            <if test="remarkExt5 != null">#{remarkExt5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUnitBoard" parameterType="com.oetsky.project.communication.domain.SysUnitBoard">
+        update sys_unit_board
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitId != null">unit_id = #{unitId},</if>
+            <if test="unitType != null and unitType != ''">unit_type = #{unitType},</if>
+            <if test="unitBoardType != null and unitBoardType != ''">unit_board_type = #{unitBoardType},</if>
+            <if test="unitBoardNum != null">unit_board_num = #{unitBoardNum},</if>
+            <if test="channelNum != null">channel_num = #{channelNum},</if>
+            <if test="hardwareVersion != null and hardwareVersion != ''">hardware_version = #{hardwareVersion},</if>
+            <if test="softwareVersion != null and softwareVersion != ''">software_version = #{softwareVersion},</if>
+            <if test="softwareCheckValue != null and softwareCheckValue != ''">software_check_value =
+                #{softwareCheckValue},
+            </if>
+            <if test="fpgaVersion != null and fpgaVersion != ''">fpga_version = #{fpgaVersion},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="remarkExt1 != null">remark_ext1 = #{remarkExt1},</if>
+            <if test="remarkExt2 != null">remark_ext2 = #{remarkExt2},</if>
+            <if test="remarkExt3 != null">remark_ext3 = #{remarkExt3},</if>
+            <if test="remarkExt4 != null">remark_ext4 = #{remarkExt4},</if>
+            <if test="remarkExt5 != null">remark_ext5 = #{remarkExt5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUnitBoardById" parameterType="Long">
+        delete from sys_unit_board where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUnitBoardByIds" parameterType="String">
+        delete from sys_unit_board where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="batchSysUnitBoardList">
+        insert into sys_unit_board(  unit_id , unit_type , unit_board_type , unit_board_num , channel_num , hardware_version , software_version , software_check_value ,fpga_version , create_by , update_by , remark , remark_ext1 , remark_ext2 , remark_ext3 , remark_ext4 , remark_ext5 ) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (   #{item.unitId},  #{item.unitType},  #{item.unitBoardType},  #{item.unitBoardNum},  #{item.channelNum},  #{item.hardwareVersion}, #{item.softwareVersion}, #{item.softwareCheckValue}, #{item.fpgaVersion}, #{item.createBy}, #{item.updateBy},  #{item.remark},  #{item.remarkExt1},  #{item.remarkExt2},  #{item.remarkExt3},  #{item.remarkExt4},  #{item.remarkExt5})
+        </foreach>
+    </insert>
+
+
+</mapper>

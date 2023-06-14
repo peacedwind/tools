@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改采集板卡信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sysUnitBoard-edit" th:object="${sysUnitBoard}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采集单元ID：</label>
+                <div class="col-sm-8">
+                    <input name="unitId" th:field="*{unitId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采集板卡号：</label>
+                <div class="col-sm-8">
+                    <input name="unitBoardNum" th:field="*{unitBoardNum}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道号：</label>
+                <div class="col-sm-8">
+                    <input name="channelNum" th:field="*{channelNum}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "communication/sysUnitBoard";
+        $("#form-sysUnitBoard-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-sysUnitBoard-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

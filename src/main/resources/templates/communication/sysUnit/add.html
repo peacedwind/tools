@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增采集单元')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sysUnit-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">服务端口号：</label>
+                <div class="col-sm-8">
+                    <input name="unitServiceProt" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采集单元名称：</label>
+                <div class="col-sm-8">
+                    <input name="unitName" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "communication/sysUnit"
+        $("#form-sysUnit-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-sysUnit-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

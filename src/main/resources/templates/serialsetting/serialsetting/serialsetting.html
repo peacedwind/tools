@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('RS-485列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>设备名称：</label>
+                            <input type="text" name="deviceName"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-group btn-sm" onclick="$.operate.add()">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-bordered">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('serialsetting:serialsetting:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('serialsetting:serialsetting:remove')}]];
+    var deviceTypeDatas = [[${@dict.getType('sys_485_device_type')}]];
+    var agreementTypeDatas = [[${@dict.getType('sys_protocol_type')}]];
+    var baudRateDatas = [[${@dict.getType('485_baud_rate')}]];
+    var dataBitDatas = [[${@dict.getType('485_data_bit')}]];
+    var parityBitDatas = [[${@dict.getType('485_check_bit')}]];
+    var stopBitDatas = [[${@dict.getType('485_stop_bit')}]];
+    var sys_normal_disable = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "serialsetting/serialsetting";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "RS-485",
+            pagination: false,
+            onCheck: function (row, $element) {
+                checkFun()
+            },
+            onUncheck: function (row) {
+                checkFun()
+            },
+            onCheckAll: function () {
+                checkFun()
+            },
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'deviceName',
+                    title: '设备名称'
+                },
+                {
+                    field: 'deviceType',
+                    title: '设备类型',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(deviceTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'agreementType',
+                    title: '通讯协议',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(agreementTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'serialNumber',
+                    title: '串口号'
+                },
+                {
+                    field: 'baudRate',
+                    title: '波特率',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(baudRateDatas, value);
+                    }
+                },
+                {
+                    field: 'dataBit',
+                    title: '数据位',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(dataBitDatas, value);
+                    }
+                },
+                {
+                    field: 'parityBit',
+                    title: '校验位',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(parityBitDatas, value);
+                    }
+                },
+                {
+                    field: 'stopBit',
+                    title: '停止位',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(stopBitDatas, value);
+                    }
+                },
+                {
+                    field: 'interfaceStatus',
+                    title: '通讯状态',
+                    formatter: function (value, row, index) {
+                        // return $.table.selectDictLabel(sys_normal_disable, value);
+                        return value === 1 ? "<a style='color: green'><i class=\"fa fa-circle\"></i> 已打开</a>"
+                            : "<a style='color: red'><i class=\"fa fa-circle\"></i> 已关闭</a>";
+                    }
+                },
+                {
+                    field: 'remark',
+                    title: '备注',
+                    visible: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.deviceType === '4') {
+                            //modbus串口单独处理
+                            if (row.interfaceStatus === 0) {
+                                actions.push('<a class="btn btn-group btn-sm ' + editFlag
+                                    + '" href="javascript:void(0)" onclick="openModbus()"><i class="fa fa-check-square-o"></i> 打开</a> ');
+                                actions.push('<a class="btn btn-group btn-sm ' + editFlag
+                                    + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id
+                                    + '\')"><i class="fa fa-edit"></i> 编辑</a> ');
+                                actions.push('<a class="btn btn-danger btn-sm ' + removeFlag
+                                    + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id
+                                    + '\')"><i class="fa fa-trash"></i> 删除</a> ');
+                            } else {
+                                actions.push('<a class="btn btn-default btn-sm ' + editFlag
+                                    + '" href="javascript:void(0)" onclick="closeModbus()"><i class="fa fa-close"></i> 关闭</a> ');
+                            }
+                        } else {
+                            //除了deviceType = 4的串口，其他串口都在这里处理
+                            if (row.interfaceStatus === 0) {
+                                actions.push('<a class="btn btn-group btn-sm' + editFlag
+                                    + '" href="javascript:void(0)" onclick="changSerialStatus(\'' + row.id
+                                    + '\',1)"><i class="fa fa-check-square-o"></i> 打开</a> ');
+                                actions.push('<a class="btn btn-group btn-sm' + editFlag
+                                    + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id
+                                    + '\')"><i class="fa fa-edit"></i> 编辑</a> ');
+                                actions.push('<a class="btn btn-danger btn-sm ' + removeFlag
+                                    + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id
+                                    + '\')"><i class="fa fa-trash"></i> 删除</a> ');
+                            } else {
+                                actions.push('<a class="btn btn-default ' + editFlag
+                                    + '" href="javascript:void(0)" onclick="changSerialStatus(\'' + row.id
+                                    + '\',0)"><i class="fa fa-close"></i> 关闭</a> ');
+                                if (row.deviceType !== '5' ) {
+                                    actions.push('<a class="btn btn-default btn-sm' + editFlag
+                                        + '" href="javascript:void(0)" onclick="readTimeMsg(\'' + row.id + '\',\''
+                                        + row.interfaceStatus + '\')"><i class="fa fa-chain"></i> 实时报文</a> ');
+                                    actions.push('<a class="btn btn-default btn-sm' + editFlag
+                                        + '" href="javascript:void(0)" onclick="testSerial(\'' + row.id + '\',\''
+                                        + row.interfaceStatus + '\')"><i class="fa fa-external-link"></i> 通讯测试</a> ');
+                                }
+                            }
+                        }
+                        if (row.deviceType === 'willfar645') {
+                            actions.push(
+                                '<a class="btn btn-default " href="/ajax/willfar" target="_new"><i class="fa fa-edit"></i>威胜报文解析</a> ');
+                        }
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    //选择处理---编辑状态是否能打开
+    function checkFun() {
+        var rows = $.table.selectColumns("interfaceStatus");
+        var len = $("#bootstrap-table").bootstrapTable("getSelections").length;
+        if(len>1 || (len == 1 && rows[0] == 1)||len == 0){
+            setTimeout(function () {
+                if(!$('#toolbar .edit').hasClass("disabled")){
+                    $('#toolbar .edit').addClass('disabled')
+                }
+            },0)
+        }
+        else{
+            setTimeout(function () {
+                if($('#toolbar .edit').hasClass("disabled")){
+                    $('#toolbar .edit').removeClass('disabled')
+                }
+            },0)
+        }
+    }
+    //打开modbus通讯
+    function openModbus() {
+        $.modal.confirm("确认打开modbus通讯？", function () {
+            $.operate.save(prefix + "/wgsmodbus/openModbus");
+        });
+    }
+    //关闭modbus通讯
+    function closeModbus() {
+        $.modal.confirm("确认关闭modbus通讯？", function () {
+            $.operate.save(prefix + "/wgsmodbus/closeModbus");
+        });
+    }
+    //改变设备状态（打开/关闭）
+    function changSerialStatus(id, interfaceStatus) {
+        var interfaceStatusMsg = "请确认是否【打开】设备?";
+        if (interfaceStatus == 0) {
+            interfaceStatusMsg = "请确认是否【关闭】设备?";
+        } else if (interfaceStatus == 1) {
+            interfaceStatusMsg = "请确认是否【打开】设备?";
+        } else {
+            $.modal.alertError("设备状态错误，请检查设备状态!!!");
+            return
+        }
+        $.modal.confirm(interfaceStatusMsg, function () {
+            $.operate.save(prefix +  "Chanage/interfaceStatusOnChange",{
+                "id": id,
+                "interfaceStatus": interfaceStatus
+            });
+        });
+    }
+    //实时报文
+    function readTimeMsg(id) {
+        var options = {
+            title: '[DL/T]串口实时报文',
+            url: prefix + "/interfaceRealTime/" + id,
+            callBack: function (index, layero) {
+                layer.close(index);
+                $.modal.closeAll();
+            }
+        };
+        $.modal.openOptions(options);
+    }
+    //通讯测试
+    function testSerial(id) {
+        $.ajax({
+            type: "get",
+            url: prefix + "/interfaceTestSend",
+            data: {
+                "id": id
+            },
+            beforeSend: function () {
+                $.modal.loading("正在通讯测试中，请观察串口设备指示灯是否闪烁...");
+            },
+            success: function (data) {
+                $.modal.closeLoading();
+                if(data.code == web_status.SUCCESS){
+                    $.modal.msgSuccess(data.msg);
+                }
+                else if (data.code == web_status.WARNING) {
+                    $.modal.alertWarning(data.msg)
+                }
+                else {
+                    $.modal.alertError(data.msg);
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

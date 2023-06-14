@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.communication.mapper.SysEventDictMapper">
+    
+    <resultMap type="com.oetsky.project.communication.domain.SysEventDict" id="SysEventDictResult">
+        <result property="id"    column="id"    />
+        <result property="eventCode"    column="event_code"    />
+        <result property="eventName"    column="event_name"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="remarkExt1"    column="remark_ext1"    />
+        <result property="remarkExt2"    column="remark_ext2"    />
+        <result property="remarkExt3"    column="remark_ext3"    />
+        <result property="remarkExt4"    column="remark_ext4"    />
+        <result property="remarkExt5"    column="remark_ext5"    />
+    </resultMap>
+
+    <sql id="selectSysEventDictVo">
+        select id, event_code, event_name, event_type, create_by, create_time, update_by, update_time, remark, remark_ext1, remark_ext2, remark_ext3, remark_ext4, remark_ext5 from sys_event_dict
+    </sql>
+
+    <select id="selectSysEventDictList" parameterType="com.oetsky.project.communication.domain.SysEventDict" resultMap="SysEventDictResult">
+        <include refid="selectSysEventDictVo"/>
+        <where>  
+            <if test="eventCode != null  and eventCode != ''"> and event_code = #{eventCode}</if>
+            <if test="eventName != null  and eventName != ''"> and event_name like  '%'|| #{eventName}|| '%' </if>
+            <if test="eventType != null "> and event_type = #{eventType}</if>
+            <if test="remarkExt1 != null  and remarkExt1 != ''"> and remark_ext1 = #{remarkExt1}</if>
+            <if test="remarkExt2 != null  and remarkExt2 != ''"> and remark_ext2 = #{remarkExt2}</if>
+            <if test="remarkExt3 != null  and remarkExt3 != ''"> and remark_ext3 = #{remarkExt3}</if>
+            <if test="remarkExt4 != null  and remarkExt4 != ''"> and remark_ext4 = #{remarkExt4}</if>
+            <if test="remarkExt5 != null  and remarkExt5 != ''"> and remark_ext5 = #{remarkExt5}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysEventDictById" parameterType="Long" resultMap="SysEventDictResult">
+        <include refid="selectSysEventDictVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysEventDict" parameterType="com.oetsky.project.communication.domain.SysEventDict" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_event_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eventCode != null and eventCode != ''">event_code,</if>
+            <if test="eventName != null and eventName != ''">event_name,</if>
+            <if test="eventType != null">event_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="remarkExt1 != null">remark_ext1,</if>
+            <if test="remarkExt2 != null">remark_ext2,</if>
+            <if test="remarkExt3 != null">remark_ext3,</if>
+            <if test="remarkExt4 != null">remark_ext4,</if>
+            <if test="remarkExt5 != null">remark_ext5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eventCode != null and eventCode != ''">#{eventCode},</if>
+            <if test="eventName != null and eventName != ''">#{eventName},</if>
+            <if test="eventType != null">#{eventType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="remarkExt1 != null">#{remarkExt1},</if>
+            <if test="remarkExt2 != null">#{remarkExt2},</if>
+            <if test="remarkExt3 != null">#{remarkExt3},</if>
+            <if test="remarkExt4 != null">#{remarkExt4},</if>
+            <if test="remarkExt5 != null">#{remarkExt5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysEventDict" parameterType="com.oetsky.project.communication.domain.SysEventDict">
+        update sys_event_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eventCode != null and eventCode != ''">event_code = #{eventCode},</if>
+            <if test="eventName != null and eventName != ''">event_name = #{eventName},</if>
+            <if test="eventType != null">event_type = #{eventType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="remarkExt1 != null">remark_ext1 = #{remarkExt1},</if>
+            <if test="remarkExt2 != null">remark_ext2 = #{remarkExt2},</if>
+            <if test="remarkExt3 != null">remark_ext3 = #{remarkExt3},</if>
+            <if test="remarkExt4 != null">remark_ext4 = #{remarkExt4},</if>
+            <if test="remarkExt5 != null">remark_ext5 = #{remarkExt5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysEventDictById" parameterType="Long">
+        delete from sys_event_dict where id = #{id}
+    </delete>
+
+    <delete id="deleteSysEventDictByIds" parameterType="String">
+        delete from sys_event_dict where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="batchSysEventDictList">
+        insert into sys_event_dict(  event_code , event_name , event_type , create_by ,   update_by ,  remark , remark_ext1 , remark_ext2 , remark_ext3 , remark_ext4 , remark_ext5 ) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (   #{item.eventCode},  #{item.eventName},  #{item.eventType},  #{item.createBy},   #{item.updateBy},  #{item.remark},  #{item.remarkExt1},  #{item.remarkExt2},  #{item.remarkExt3},  #{item.remarkExt4},  #{item.remarkExt5})
+        </foreach>
+    </insert>
+
+
+</mapper>

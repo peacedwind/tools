@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:include="include :: header('修改RS-485')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+  <form class="form-horizontal m" id="form-serialsetting-edit" th:object="${dvSerialSetting}">
+    <input name="id" th:field="*{id}" type="hidden">
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">设备名称：</label>
+      <div class="col-sm-8">
+        <input name="deviceName" th:field="*{deviceName}" class="form-control" maxlength="64" type="text" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">设备类型：</label>
+      <div class="col-sm-8">
+        <select id="deviceType" name="deviceType" class="form-control m-b"
+                onchange="changeDeviceType(this)"
+                th:with="type=${@dict.getType('sys_485_device_type')}" required>
+          <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                  th:field="*{deviceType}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">当前机器存在的串口：</label>
+      <div class="col-sm-8">
+        <select onchange="changePort(this)" name="serialNumberStr" class="form-control m-b"
+                th:with="portBean=${@serialSettingCache.findSerialPort()}">
+          <option th:each="bean : ${portBean}" th:text="${bean.serialLabel}"
+                  th:value="${bean.serialCode}"
+                  th:field="*{serialNumber}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">串口号：</label>
+      <div class="col-sm-8">
+        <input name="serialNumber" id="serialNumber" class="form-control" type="text" maxlength="30"
+               th:field="*{serialNumber}" readonly required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">通讯协议：</label>
+      <div class="col-sm-8">
+        <select id="agreementType" name="agreementType"
+                class="form-control m-b"
+                th:with="type=${@dict.getType('sys_protocol_type')}" required>
+          <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                  th:field="*{agreementType}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">波特率：</label>
+      <div class="col-sm-8">
+        <select id="baudRate" name="baudRate" class="form-control m-b"
+                th:with="type=${@dict.getType('485_baud_rate')}"
+                required>
+          <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                  th:field="*{baudRate}"></option>
+        </select>
+      </div>
+
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">数据位：</label>
+      <div class="col-sm-8">
+        <select id="dataBit" name="dataBit" class="form-control m-b"
+                th:with="type=${@dict.getType('485_data_bit')}"
+                required>
+          <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                  th:field="*{dataBit}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">校验位：</label>
+      <div class="col-sm-8">
+        <select id="parityBit" name="parityBit" class="form-control m-b"
+                th:with="type=${@dict.getType('485_check_bit')}"
+                 required>
+          <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                  th:field="*{parityBit}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label is-required">停止位：</label>
+      <div class="col-sm-8">
+        <select id="stopBit" name="stopBit" class="form-control m-b"
+                th:with="type=${@dict.getType('485_stop_bit')}"
+                required>
+          <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                  th:field="*{stopBit}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">备注：</label>
+      <div class="col-sm-8">
+        <input name="remark" th:field="*{remark}" class="form-control" type="text">
+      </div>
+    </div>
+  </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+  var prefix = ctx + "serialsetting/serialsetting";
+  var serialList;
+  $(document).ready(function () {
+    serialList = [[${@serialSettingCache.findSerialPort()}]];
+    console.log(serialList)
+    var serialCodeSelect = $("[name='serialNumberStr']").find("option:selected").val();
+    var serailNumOld = $("#serialNumber").val();
+    changeSerialNum(serialCodeSelect)
+    var serailNumNew = $("#serialNumber").val();
+    if (serailNumNew == null || serailNumNew == "") {
+      $("#serialNumber").val(serailNumOld);
+    }
+  })
+  $("#form-serialsetting-edit").validate({
+    onkeyup: false,
+    rules: {
+      deviceType: {
+        remote: {
+          url: prefix + "/checkDerviceTypeUnique",
+          type: "post",
+          dataType: "json",
+          data: {
+            "id": function () {
+              return $.common.trim($("[name='id']").val());
+            },
+            "deviceType": function () {
+              return $.common.trim($("[name='deviceType']").val());
+            }
+          },
+          dataFilter: function (data, type) {
+            return $.validate.unique(data);
+          }
+        }
+      },
+      serialNumberStr: {
+        remote: {
+          url: prefix + "/checkDerviceTypeUnique",
+          type: "post",
+          dataType: "json",
+          data: {
+            "id": function () {
+              return $.common.trim($("[name='id']").val());
+            },
+            "serialNumber": function () {
+              var serialNumberS = $.common.trim(
+                  $("[name='serialNumberStr']").find("option:selected").val());
+              if (serialNumberS == '/dev/COMXXX') {
+                serialNumberS = serialNumberS + "1";
+              }
+              return serialNumberS;
+            }
+          },
+          dataFilter: function (data, type) {
+            return $.validate.unique(data);
+          }
+        }
+      },
+      deviceName: {
+        minlength: 5,
+        maxlength: 64
+      },
+      remark: {
+        minlength: 5,
+        maxlength: 128
+      },
+    },
+    messages: {
+      "deviceType": {
+        remote: "设备类型已存在，请重新选择!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+      },
+      "serialNumberStr": {
+        remote: "串口号已存在，请重新选择!!!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+      }
+    },
+    focusCleanup: true
+  });
+
+  function changeSerialNum(serialCodeSelect) {
+    if (serialCodeSelect == "" || serialCodeSelect == null) {
+      $("#serialNumber").val("");
+      return
+    }
+    //修改串口值
+    for (let i = 0; i < serialList.length; i++) {
+      serial = serialList[i]
+      console.log(serial)
+      if (serial.serialCode == serialCodeSelect) {
+        $("#serialNumber").val(serial.serialLabel);
+        break
+      }
+    }
+  }
+
+  /**
+   * 值改变后，修改串口号
+   * @param obj
+   */
+  function changePort(obj) {
+    var serialCodeSelect = $(obj).val();
+    changeSerialNum(serialCodeSelect);
+
+  }
+
+  //取消禁用--变为可更改状态
+  function editEnable(id) {
+    document.getElementById(id).removeAttribute('disabled')
+  }
+
+  //form表单不支持获取disabled数据
+  function enableEdit() {
+    var disabledInputArr = ['baudRate', 'dataBit', 'parityBit', 'stopBit']
+    disabledInputArr.forEach(value => {
+      editEnable(value)
+    })
+  }
+
+  function changeDeviceType(obj) {
+    let deviceType = $(obj).val();
+    //选择威胜终端，自动选择协议和波特率等配置。
+    if (deviceType === '6' || deviceType === '7' || deviceType === 'willfar645') {
+      $("#agreementType").val("645");
+    } else {
+      $("#agreementType").val("698");
+    }
+    changeAgreementType();
+  }
+
+  function changeAgreementType() {
+    //获取协议类型
+    var agreementType = $("#agreementType").val();
+    var deviceType = $("#deviceType").val();
+    if (agreementType == '698' || agreementType.indexOf('698') != -1) {
+      //波特率
+      if (deviceType == '232') {
+        $("#baudRate").val("115200");
+      } else {
+        $("#baudRate").val("9600");
+      }
+      //校验位
+      if (deviceType == '232' || deviceType == '4' || deviceType == '485-THAU') {
+        $("#parityBit").val("0");
+      } else {
+        $("#parityBit").val("2");
+      }
+      //数据位
+      $("#dataBit").val("8");
+      //停止位
+      $("#stopBit").val("1");
+      return
+    }
+    if (agreementType == '645') {
+      //波特率
+      $("#baudRate").val("9600");
+      //数据位
+      $("#dataBit").val("8");
+      //校验位
+      $("#parityBit").val("2");
+      //停止位
+      $("#stopBit").val("1");
+    }
+
+  }
+
+  function submitHandler() {
+    if ($.validate.form()) {
+      var serialCodeSelect = $("[name='serialNumberStr']").find("option:selected").val();
+      if (serialCodeSelect != null) {
+        for (let i = 0; i < serialList.length; i++) {
+          serial = serialList[i]
+          if (serial.serialCode == serialCodeSelect) {
+
+            var label = serial.serialLabel;
+            if (label == $("#serialNumber").val()) {
+              $("#serialNumber").val(serial.serialCode);
+            }
+            break
+          }
+        }
+      }
+      enableEdit();
+      $.operate.save(prefix + "/edit", $('#form-serialsetting-edit').serialize());
+    }
+  }
+</script>
+</body>
+</html>

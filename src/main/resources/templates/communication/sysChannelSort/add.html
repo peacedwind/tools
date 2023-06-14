@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增采集通道信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sysChannelSort-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">采集单元ID：</label>
+                <div class="col-sm-8">
+                    <input name="unitId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">板卡号：</label>
+                <div class="col-sm-8">
+                    <input name="boardNum" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道号：</label>
+                <div class="col-sm-8">
+                    <input name="channelNum" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道地址：</label>
+                <div class="col-sm-8">
+                    <input name="channelAddr" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道序号：</label>
+                <div class="col-sm-8">
+                    <input name="channelSort" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">数字化站点SVID：</label>
+                <div class="col-sm-8">
+                    <input name="svId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">数字化站点APPID：</label>
+                <div class="col-sm-8">
+                    <input name="appId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备用：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "communication/sysChannelSort"
+        $("#form-sysChannelSort-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-sysChannelSort-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

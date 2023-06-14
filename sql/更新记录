@@ -1,0 +1,35 @@
+2021-12-11 18:30:21   ---   2021-12-12 19:36:42
+调整配置支持sqlite嵌入式数据库
+1、首先添加【依赖包】  、sqlite依赖、【注释 ScheduleConfig。java】定时任务配置   src/main/java/com/ruoyi/framework/config/ScheduleConfig.java
+2、添加【application.yml】、修改url配置文件、驱动时间格式、配置数据库绝对路径  java mybatisplus Error parsing time stamp   https://blog.csdn.net/weixin_39910452/article/details/118391867
+3、调整 【application.yml 配置检测连接是否有效】 sqlite 不支持DUAL, 调整为sys_user
+4、sqlite 获取系统当前时间是 sysdate()/datetime('now'),插入时间使用datetime('now')【修改**.xml文件】 
+Sqlite 当前时区的当前时间与正常查8h.   datetime('now') 更改为 (datetime(CURRENT_TIMESTAMP,'localtime'))
+5、sqlite设置主键自动增长、sqlit修改默认值 :slite_sequence存储的表的自增长id   【修改数据库文件】
+6、清空表记录:SQLite中并不支持Truncate语句、使用Delete来删除全部表数据、sqlite_sequenc存放表自增列的当前序号【修改**.xml文件】
+	delete from TableName;  //清空数据
+	update sqlite_sequence SET seq = 0 where name ='TableName';//自增长ID为0
+7、Date日期类型( Sat Dec 11 20:51:41 CST 2021)插入数据库后会转换为时间戳;【 数据库文件修改日期格式为date,默认(strftime('%Y-%m-%d %H:%M:%f','now'))】
+8、 replace into sys_user_online 【报错后数据不影响正常运行】   merge sql error, dbType sqlite, druid-1.2.8, sql : replace into sys_user_online
+9、关联语句查询页面，【前端设置 sortName: "u.createTime"】  SQL error or missing database (ambiguous column name: create_time)
+10、在SQLite中替代mysql中find_in_set()函数的使用  FIND_IN_SET(value, column_name)    【修改**。xml文件】
+如果只需要true/false值而不是索引，则可以使用LIKE子句: (',' || column_name || ',') LIKE '%,value,%'   https://www.it1352.com/1667649.html
+11、SQLite 与 Mysql 分别在mybatis中模糊查询的写法    LIKE CONCAT('%',#{roleName},'%')  /    like '%'||#{roleName}||'%'      https://www.jianshu.com/p/5c90722a66cd
+Sqlite中不包含Concat函数帮助我们处理，就只能用最原始的字符串拼接，特别的Sqlite中使用 '||' 符号做拼接而不是 ‘+’   【修改**。xml文件】
+12、【tool模块 语法差别较大，未处理】   MySQL， SQLite 和 PostgreSQL 关于information_schema 的一些查询（表结构，表信息，库信息....）    https://blog.csdn.net/weixin_41986096/article/details/106236359
+13、 处理排序失败，引入jsqlparser依赖未解决【 报错后数据不影响正常运行】: net.sf.jsqlparser.JSQLParserException: Encountered unexpected token: "||" <OP_CONCAT>    at line 4, column 37.
+
+调整文件汇总
+调整版本：v4.7.1  更新日志：http://doc.ruoyi.vip/ruoyi/document/gxrz.html#v4-7-1
+src/main/java/com/ruoyi/framework/config/ScheduleConfig.java
+src/main/resources/mybatis/**/**.xml
+src/main/resources/templates/system/user/user.html
+src/main/resources/application-druid.yml
+src/main/resources/application.yml
+pom.xml
+
+src/main/java/com/ruoyi/framework/aspectj/DataScopeAspect.java
+
+调整配置支持sqlite嵌入式数据库
+14、Sqlite 当前时区的当前时间与正常差8h调整.   datetime('now') 更改为 (datetime(CURRENT_TIMESTAMP,'localtime'))
+15、 concat函数调整  concat(m.menu_id, ifnull(m.perms,''))——————(m.menu_id || ifnull(m.perms,''))
