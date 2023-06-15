@@ -3,8 +3,11 @@ package com.oetsky.project.dataselect.mapper;
 
 import cn.hutool.core.date.DateTime;
 import com.oetsky.project.dataselect.domain.DaVoltageData;
+
+import java.util.Date;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -25,6 +28,21 @@ public interface DaVoltageDataMapper {
     List<DaVoltageData> selectDaVoltageDataList(DaVoltageData daVoltageData);
 
     DaVoltageData selectDaVoltageDataById(Long id);
+    /**
+     * 查询响应终端的采集数据
+     * @param measureTimeList
+     * @param measureTime
+     * @param channelNum
+     * @return
+     */
+    List<DaVoltageData> selectSampleDataExitDataList(List<Date> measureTimeList, Date measureTime, Integer channelNum);
+
+    /**
+     *
+     * @param map
+     * @return
+     */
+    DaVoltageData selectSampleDataByRecently(Map<String, Object> map);
 
     void batchDaVoltageDataList(List<DaVoltageData> daVoltageData);
 

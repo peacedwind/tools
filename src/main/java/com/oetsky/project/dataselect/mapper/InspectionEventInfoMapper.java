@@ -1,6 +1,8 @@
 package com.oetsky.project.dataselect.mapper;
 
 import com.oetsky.project.dataselect.domain.InspectionEventInfo;
+import com.oetsky.project.serialsetting.serial.domain.EventInfoData;
+
 import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -28,6 +30,15 @@ public interface InspectionEventInfoMapper {
      * @return 对象列表
      */
     List<InspectionEventInfo> list(InspectionEventInfo inspectionEventInfo);
+
+    /**
+     *  异常数据
+     * @param eventInfoData
+     * @return
+     */
+    List<EventInfoData> selectInspectionEventInfoListBy(EventInfoData eventInfoData);
+
+
 
     Integer selectMaxId();
 

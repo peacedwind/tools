@@ -295,6 +295,19 @@ public class DaVoltageData extends BaseEntity {
     @Excel(name = "板卡采样值C通道品质位")
     private String ccLogicDataQuality;
 
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    /**
+     * 保留字段
+     */
+    private String flag;
+
     /**
      * 扩展字段1
      */

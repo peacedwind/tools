@@ -5,6 +5,8 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.oetsky.common.utils.bean.BeanUtils;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import com.oetsky.project.dataselect.domain.InspectionEventInfo;
 import com.oetsky.project.dataselect.mapper.InspectionEventInfoMapper;
 import com.oetsky.project.dataselect.service.InspectionEventInfoService;
@@ -16,9 +18,14 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.*;
+
 import java.util.Random;
 import javax.annotation.Resource;
 
+import com.oetsky.project.serialsetting.serial.domain.EventInfoData;
+import com.oetsky.project.serialsetting.serial.utils.DLT698Utils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -213,4 +220,51 @@ public class InspectionEventInfoServiceImpl implements InspectionEventInfoServic
         Integer count = this.inspectionEventInfoMapper.countDataByDate(date,DateUtil.offsetDay(date,1));
         return count != null && count > 0;
     }
+    public static Map<Long,Map<Integer,List<EventInfoData>>> eventChannelData= new HashMap<>();
+    @Override
+    public List<EventInfoData> selectInspectionEventInfoListBy(EventInfoData eventInfoData) {
+        List<EventInfoData> list = new ArrayList<>();
+        Date createTime = eventInfoData.getCreateTime();
+        if(createTime == null){
+            createTime = DateUtils.addMinutes(DLT698Utils.getLastPointDate(new Date()), -15);
+            eventInfoData.setCreateTime(createTime);
+        }
+        Long timeLog = Convert.toLong(DateUtil.format(createTime,"yyyyMMddHHmmss"));
+        Map<Integer, List<EventInfoData>> mmap = eventChannelData.get(timeLog);
+        if(CollUtil.isNotEmpty(mmap)){
+            list = mmap.get(eventInfoData.getChannelNum());
+            if(CollUtil.isNotEmpty(list)){
+                return list;
+            }
+        }
+        List<EventInfoData> eventInfoDataList = inspectionEventInfoMapper
+                .selectInspectionEventInfoListBy(eventInfoData);
+        if(CollUtil.isNotEmpty(eventInfoDataList)){
+            if(CollUtil.isNotEmpty(eventChannelData) && eventChannelData.size() > 1){
+                Iterator<Map.Entry<Long,Map<Integer,List<EventInfoData>>>> it = eventChannelData.entrySet().iterator();
+                if(it!=null){
+                    while (it.hasNext()){
+                        // 删除历史数据
+                        Map.Entry<Long, Map<Integer, List<EventInfoData>>> next = it.next();
+                        if(!next.getKey().equals(eventInfoData.getCreateTime())){
+                            it.remove();
+                            eventChannelData.remove(next.getKey());
+                        }
+                    }
+                }
+            }
+            // 2023-4-16 取消默认事件序序，按需求排序
+            // eventInfoDataList.sort(Comparator.comparing(EventInfoData :: getId ).reversed());
+            Map<Integer, List<EventInfoData>> integerListMap = eventChannelData.get(timeLog);
+            if(integerListMap == null){
+                integerListMap = new HashMap<>();
+            }
+            integerListMap.put(eventInfoData.getChannelNum(), eventInfoDataList);
+            eventChannelData.put(timeLog, integerListMap);
+        } else {
+            eventInfoDataList = new ArrayList<>();
+        }
+        return eventInfoDataList;
+    }
+
 }

@@ -118,6 +118,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
         </where>
     </select>
+    <select id="selectSampleDataExitDataList" resultType="com.oetsky.project.dataselect.domain.DaVoltageData">
+        <include refid="selectDaVoltageDataVo"/>
+        <where>
+            <if test="measureTimeList != null  ">AND
+                collect_time in
+                <foreach item="measureTime" collection="measureTimeList" open="(" separator="," close=")">
+                    #{measureTime}
+                </foreach>
+            </if>
+            <if test="channelNum != null  ">AND channel_num = #{channelNum}</if>
+        </where>
+        ORDER BY collect_time DESC
+    </select>
+    <select id="selectSampleDataByRecently" resultType="com.oetsky.project.dataselect.domain.DaVoltageData">
+        <include refid="selectDaVoltageDataVo"/>
+        <where>
+            <if test="startMeasureTime != null  ">AND
+                collect_time between #{startMeasureTime} and #{endMeasureTime}
+            </if>
+            <if test="measureTime != null  ">AND
+                collect_time &lt;= DATE_ADD(DATE_FORMAT(#{measureTime},'%Y-%m-%d %H:%i'),INTERVAL 59 SECOND)
+            </if>
+            <if test="channelNum != null  ">AND channel_num = #{channelNum}</if>
+        </where>
+        ORDER BY collect_time DESC
+        limit 1
+    </select>
 
     <insert id="batchDaVoltageDataList">
         insert or replace into da_voltage_data(  board_num , board_channel , channel_num , collect_time , time_type , aa_fundamental_frequency , aa_fundamental_amplitude , a3_harmonic_amplitude , a5_harmonic_amplitude , aa_fundamental_phase , a3_harmonic_phase , a5_harmonic_phase , bb_fundamental_frequency , bb_fundamental_amplitude , b3_harmonic_amplitude , b5_harmonic_amplitude , bb_fundamental_phase , b3_harmonic_phase , b5_harmonic_phase , cc_fundamental_frequency , cc_fundamental_amplitude , c3_harmonic_amplitude , c5_harmonic_amplitude , cc_fundamental_phase , c3_harmonic_phase , c5_harmonic_phase , zero_sequence_voltage_imbalance , negative_sequence_voltage_imbalance , status , channel_level , create_time , column1 , column2 , column3 , is_supplement , aa_board_sort_num , bb_board_sort_num , cc_board_sort_num,

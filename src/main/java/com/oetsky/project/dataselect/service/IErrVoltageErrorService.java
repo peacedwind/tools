@@ -1,8 +1,12 @@
 package com.oetsky.project.dataselect.service;
 
+import com.oetsky.project.dataselect.domain.DaVoltageData;
 import com.oetsky.project.dataselect.domain.ErrVoltageError;
+
+import java.util.Date;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 电压互感器误差数据Service接口
@@ -20,6 +24,14 @@ public interface IErrVoltageErrorService {
      */
     List<ErrVoltageError> selectErrVoltageErrorList(ErrVoltageError errVoltageError);
 
+    /**
+     * 查询响应终端的计算数据
+     * @param voltageSampleList
+     * @param collectTime1
+     * @param channel
+     * @return
+     */
+    Map<Integer, ErrVoltageError> selectVoltageCalculateByRecentlyList(Map<Date, DaVoltageData> voltageSampleList, Date collectTime1, Integer channel);
 
     /**
      * 计算数据
@@ -33,4 +45,10 @@ public interface IErrVoltageErrorService {
 
     void createData();
 
+    /**
+     *
+     * @param map
+     * @return
+     */
+    ErrVoltageError selectVoltageCalculateByRecently(Map<String, Object> map);
 }

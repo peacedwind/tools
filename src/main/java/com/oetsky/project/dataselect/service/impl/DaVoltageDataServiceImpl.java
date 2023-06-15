@@ -1,18 +1,22 @@
 package com.oetsky.project.dataselect.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.oetsky.common.frame.utils.ProtocolUtils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.oetsky.project.dataselect.domain.DaVoltageData;
-import com.oetsky.project.dataselect.domain.InspectionEventInfo;
 import com.oetsky.project.dataselect.mapper.DaVoltageDataMapper;
 import com.oetsky.project.dataselect.service.IDaVoltageDataService;
+
+import java.util.*;
+
+import com.oetsky.project.serialsetting.serial.utils.FrameNotData;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -184,5 +188,60 @@ public class DaVoltageDataServiceImpl implements IDaVoltageDataService {
     private boolean existsDataByDate(Date date) {
         Integer count = this.daVoltageDataMapper.countDataByDate(date,DateUtil.offsetDay(date,1));
         return count != null && count > 0;
+    }
+    /**
+     * 查询响应终端的采集数据
+     * @param measureTimeList
+     * @param measureTime
+     * @param channelNum
+     * @return
+     */
+    @Override
+    public Map<Date, DaVoltageData> selectSampleDataExitDataList(List<Date> measureTimeList, Date measureTime, Integer channelNum) {
+        Map<Date, DaVoltageData> map = new HashMap<>();
+        List<DaVoltageData> voltageSampleList = daVoltageDataMapper
+                .selectSampleDataExitDataList(measureTimeList, measureTime, channelNum);
+        if(CollUtil.isEmpty(voltageSampleList)){
+            map.put(measureTime, FrameNotData.sampleDataNotData(measureTime));
+            return map;
+        }
+        for (DaVoltageData vs : voltageSampleList) {
+            map.put(ProtocolUtils.getLastPointDate(vs.getCollectTime()),vs);
+        }
+        Map<Date, DaVoltageData> map2 = new HashMap<>();
+        if(CollUtil.isNotEmpty(map) && map.size() == 1){
+            return map;
+        }
+        for (Date dateTime : measureTimeList) {
+            DaVoltageData voltageSample = map.get(dateTime);
+            if(voltageSample != null){
+                map2.put(dateTime, voltageSample);
+            }
+        }
+        return sortMapByKey(map2);
+    }
+
+    @Override
+    public DaVoltageData selectSampleDataByRecently(Map<String, Object> map) {
+        return daVoltageDataMapper.selectSampleDataByRecently(map);
+    }
+
+    /**
+     * 使用 Map按key进行排序
+     * @param map
+     * @return
+     */
+    public static Map<Date, DaVoltageData> sortMapByKey(Map<Date, DaVoltageData> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+        Map<Date, DaVoltageData> sortMap = new TreeMap<Date, DaVoltageData>(new Comparator<Date>(){
+            @Override
+            public int compare(Date o1, Date o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        sortMap.putAll(map);
+        return sortMap;
     }
 }
