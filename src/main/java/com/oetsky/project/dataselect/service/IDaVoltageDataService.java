@@ -2,6 +2,7 @@ package com.oetsky.project.dataselect.service;
 
 
 import com.oetsky.project.dataselect.domain.DaVoltageData;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,5 +28,31 @@ public interface IDaVoltageDataService {
      */
     List<DaVoltageData> selectDaVoltageDataList(DaVoltageData daVoltageData);
 
+
+    /**
+     * 判断当天是否有数据
+     * @param date
+     * @return
+     */
+    boolean existsDate(Date date);
+
+    /**
+     * 生成当天的数据
+     *
+     * @param date 日期
+     * @return
+     */
+    List<DaVoltageData> createDataByDate(Date date);
+
+    /**
+     * 批量保存
+     * @param dataList 数据
+     */
+    void batchDaVoltageDataList(List<DaVoltageData> dataList);
+
+    /**
+     * 生成数据
+     */
+    void createData();
 
 }

@@ -57,7 +57,7 @@
     <!--查询指定行数据-->
     <select id="list" resultMap="InspectionEventInfoMap">
         select
-        IFNULL(t2.id,t1.id) as id, t1.num as num, t1.event_type as event_type, t1.event_code event_code,
+        IFNULL(t1.id,t2.id) as id, t1.num as num, t1.event_type as event_type, t1.event_code event_code,
         t1.event_name event_name, t1.event_source event_source, t1.start_time start_time,
         t1.source_code source_code,
         t1.source_unit_id source_unit_id,
@@ -161,7 +161,36 @@
 
     </select>
 
+    <select id="selectMaxId" resultType="integer">
+        select max(id) from inspection_event_info;
+    </select>
 
+
+    <insert id="insertBatch" >
+        insert or replace into inspection_event_info(id,num, event_type, event_code, event_name, event_source,
+        start_time,
+        recovery_time, recovery_reason, source_code,
+        source_unit_id, source_unit_type, source_board_num, source_channel_num, source_channel_name,
+        event_status, create_time,exception_id, reserved1, reserved2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id},#{entity.num}, #{entity.eventType}, #{entity.eventCode}, #{entity.eventName},
+            #{entity.eventSource},
+            #{entity.startTime}, #{entity.recoveryTime}, #{entity.recoveryReason},
+            #{entity.sourceCode},
+            #{entity.sourceUnitId}, #{entity.sourceUnitType}, #{entity.sourceBoardNum},
+            #{entity.sourceChannelNum},
+            #{entity.sourceChannelName},
+            #{entity.eventStatus}, #{entity.createTime}, #{entity.exceptionId},#{entity.reserved1},
+            #{entity.reserved2})
+        </foreach>
+    </insert>
+
+    <select id="countDataByDate" resultType="integer">
+        select count(*) from inspection_event_info
+        where  start_time <![CDATA[ >= ]]> #{start}
+                and start_time <![CDATA[ < ]]> #{end}
+    </select>
 
 </mapper>
 

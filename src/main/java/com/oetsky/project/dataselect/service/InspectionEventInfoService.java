@@ -2,6 +2,7 @@ package com.oetsky.project.dataselect.service;
 
 
 import com.oetsky.project.dataselect.domain.InspectionEventInfo;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,4 +30,15 @@ public interface InspectionEventInfoService {
     List<InspectionEventInfo> list(InspectionEventInfo inspectionEventInfo);
 
 
+    /**
+     * 生成事件list
+     * @return
+     */
+    List<InspectionEventInfo> createEventList(Date data);
+
+
+    void batSave(List<InspectionEventInfo> inspectionEventInfos);
+
+
+    void createData();
 }

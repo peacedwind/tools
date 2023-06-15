@@ -119,4 +119,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <insert id="batchDaVoltageDataList">
+        insert or replace into da_voltage_data(  board_num , board_channel , channel_num , collect_time , time_type , aa_fundamental_frequency , aa_fundamental_amplitude , a3_harmonic_amplitude , a5_harmonic_amplitude , aa_fundamental_phase , a3_harmonic_phase , a5_harmonic_phase , bb_fundamental_frequency , bb_fundamental_amplitude , b3_harmonic_amplitude , b5_harmonic_amplitude , bb_fundamental_phase , b3_harmonic_phase , b5_harmonic_phase , cc_fundamental_frequency , cc_fundamental_amplitude , c3_harmonic_amplitude , c5_harmonic_amplitude , cc_fundamental_phase , c3_harmonic_phase , c5_harmonic_phase , zero_sequence_voltage_imbalance , negative_sequence_voltage_imbalance , status , channel_level , create_time , column1 , column2 , column3 , is_supplement , aa_board_sort_num , bb_board_sort_num , cc_board_sort_num,
+        aa_clock_status , bb_clock_status , cc_clock_status , aa_logic_data_quality , bb_logic_data_quality , cc_logic_data_quality ) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (   #{item.boardNum},  #{item.boardChannel},  #{item.channelNum},  #{item.collectTime},  #{item.timeType},  #{item.aaFundamentalFrequency},  #{item.aaFundamentalAmplitude},  #{item.a3HarmonicAmplitude},  #{item.a5HarmonicAmplitude},  #{item.aaFundamentalPhase},  #{item.a3HarmonicPhase},  #{item.a5HarmonicPhase},  #{item.bbFundamentalFrequency},  #{item.bbFundamentalAmplitude},  #{item.b3HarmonicAmplitude},  #{item.b5HarmonicAmplitude},  #{item.bbFundamentalPhase},  #{item.b3HarmonicPhase},  #{item.b5HarmonicPhase},  #{item.ccFundamentalFrequency},  #{item.ccFundamentalAmplitude},  #{item.c3HarmonicAmplitude},  #{item.c5HarmonicAmplitude},  #{item.ccFundamentalPhase},  #{item.c3HarmonicPhase},  #{item.c5HarmonicPhase},  #{item.zeroSequenceVoltageImbalance},  #{item.negativeSequenceVoltageImbalance},  #{item.status},  #{item.channelLevel},  #{item.createTime},  #{item.column1},  #{item.column2},  #{item.column3},  #{item.isSupplement},
+            #{item.aaBoardSortNum},  #{item.bbBoardSortNum},  #{item.ccBoardSortNum},  #{item.aaClockStatus},  #{item.bbClockStatus},  #{item.ccClockStatus},  #{item.aaLogicDataQuality},  #{item.bbLogicDataQuality},  #{item.ccLogicDataQuality})
+        </foreach>
+    </insert>
+
+    <select id="countDataByDate" resultType="integer">
+        select count(*) from da_voltage_data
+        where collect_time <![CDATA[ >= ]]>  #{start}
+            and collect_time <![CDATA[ < ]]>  #{end}
+
+    </select>
+
 </mapper>

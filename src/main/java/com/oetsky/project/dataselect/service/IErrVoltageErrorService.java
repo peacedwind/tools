@@ -1,6 +1,7 @@
 package com.oetsky.project.dataselect.service;
 
 import com.oetsky.project.dataselect.domain.ErrVoltageError;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,5 +20,17 @@ public interface IErrVoltageErrorService {
      */
     List<ErrVoltageError> selectErrVoltageErrorList(ErrVoltageError errVoltageError);
 
+
+    /**
+     * 计算数据
+     * @param date 日期
+     * @return list
+     */
+    List<ErrVoltageError> createErrVoltageError(Date date);
+
+
+    int batchErrVoltageErrorList(List<ErrVoltageError> errVoltageErrorList);
+
+    void createData();
 
 }
