@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.dataselect.mapper.ErrVoltageErrorMapper">
+    
+    <resultMap type="com.oetsky.project.dataselect.domain.ErrVoltageError" id="ErrVoltageErrorResult">
+        <result property="id"    column="id"    />
+        <result property="channelNum"    column="channel_num"    />
+        <result property="calculateTime"    column="calculate_time"    />
+        <result property="aaRatioError"    column="aa_ratio_error"    />
+        <result property="bbRatioError"    column="bb_ratio_error"    />
+        <result property="ccRatioError"    column="cc_ratio_error"    />
+        <result property="aaRatioVariance"    column="aa_ratio_variance"    />
+        <result property="bbRatioVariance"    column="bb_ratio_variance"    />
+        <result property="ccRatioVariance"    column="cc_ratio_variance"    />
+        <result property="aaAngleError"    column="aa_angle_error"    />
+        <result property="bbAngleError"    column="bb_angle_error"    />
+        <result property="ccAngleError"    column="cc_angle_error"    />
+        <result property="aaAngleVariance"    column="aa_angle_variance"    />
+        <result property="bbAngleVariance"    column="bb_angle_variance"    />
+        <result property="ccAngleVariance"    column="cc_angle_variance"    />
+        <result property="dataStartTime"    column="data_start_time"    />
+        <result property="dataEndTime"    column="data_end_time"    />
+        <result property="ubNew"    column="ub_new"    />
+        <result property="inputub"    column="inputub"    />
+        <result property="channelLevel"    column="channel_level"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="calculateStatus"    column="calculate_status"    />
+        <result property="calculateMsg"    column="calculate_msg"    />
+        <result property="ratioVarargin"    column="ratio_varargin"    />
+        <result property="angleVarargin"    column="angle_varargin"    />
+
+        <result property="groupId"    column="group_id"    />
+        <result property="groupPriority"    column="group_priority"    />
+        <result property="aaQualitativeResult"    column="aa_qualitative_result"    />
+        <result property="bbQualitativeResult"    column="bb_qualitative_result"    />
+        <result property="ccQualitativeResult"    column="cc_qualitative_result"    />
+
+    </resultMap>
+
+    <sql id="selectErrVoltageErrorVo">
+        select id, channel_num, calculate_time, aa_ratio_error, bb_ratio_error, cc_ratio_error, aa_ratio_variance, bb_ratio_variance, cc_ratio_variance, aa_angle_error, bb_angle_error,
+               cc_angle_error, aa_angle_variance, bb_angle_variance, cc_angle_variance, data_start_time, data_end_time, ub_new, inputub, channel_level, create_time
+                ,calculate_status,calculate_msg,
+                group_id,group_priority,aa_qualitative_result,bb_qualitative_result,cc_qualitative_result,ratio_varargin,angle_varargin
+        from err_voltage_error
+    </sql>
+
+    <select id="selectErrVoltageErrorList" parameterType="com.oetsky.project.dataselect.domain.ErrVoltageError" resultMap="ErrVoltageErrorResult">
+        <include refid="selectErrVoltageErrorVo"/>
+        <where>  
+            <if test="channelNum != null "> and channel_num = #{channelNum}</if>
+            <if test="calculateTime != null "> and STR_TO_DATE(calculate_time,'%Y-%m-%d')  = #{calculateTime}</if>
+            <if test="aaRatioError != null "> and aa_ratio_error = #{aaRatioError}</if>
+            <if test="bbRatioError != null "> and bb_ratio_error = #{bbRatioError}</if>
+            <if test="ccRatioError != null "> and cc_ratio_error = #{ccRatioError}</if>
+            <if test="aaRatioVariance != null "> and aa_ratio_variance = #{aaRatioVariance}</if>
+            <if test="bbRatioVariance != null "> and bb_ratio_variance = #{bbRatioVariance}</if>
+            <if test="ccRatioVariance != null "> and cc_ratio_variance = #{ccRatioVariance}</if>
+            <if test="aaAngleError != null "> and aa_angle_error = #{aaAngleError}</if>
+            <if test="bbAngleError != null "> and bb_angle_error = #{bbAngleError}</if>
+            <if test="ccAngleError != null "> and cc_angle_error = #{ccAngleError}</if>
+            <if test="aaAngleVariance != null "> and aa_angle_variance = #{aaAngleVariance}</if>
+            <if test="bbAngleVariance != null "> and bb_angle_variance = #{bbAngleVariance}</if>
+            <if test="ccAngleVariance != null "> and cc_angle_variance = #{ccAngleVariance}</if>
+            <if test="dataStartTime != null "> and data_start_time = #{dataStartTime}</if>
+            <if test="dataEndTime != null "> and data_end_time = #{dataEndTime}</if>
+            <if test="ubNew != null  and ubNew != ''"> and ub_new = #{ubNew}</if>
+            <if test="inputub != null  and inputub != ''"> and inputub = #{inputub}</if>
+            <if test="channelLevel != null "> and channel_level = #{channelLevel}</if>
+            <if test="calculateTimeStart != null">
+                and calculate_time <![CDATA[ >= ]]>  #{calculateTimeStart}
+            </if>
+            <if test="calculateTimeEnd != null">
+                and calculate_time <![CDATA[ <= ]]>  #{calculateTimeEnd}
+            </if>
+        </where>
+    </select>
+
+</mapper>

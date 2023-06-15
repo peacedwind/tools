@@ -1,4 +1,4 @@
-package com.oetsky.project.datacheck.domain;
+package com.oetsky.project.dataselect.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -144,12 +144,38 @@ public class ErrVoltageError extends BaseEntity
      */
     private Integer groupPriority;
 
+    /**
+     * 计算开始时间
+     */
+    private Date calculateTimeStart;
+
+    /**
+     * 计算结束时间
+     */
+    private Date calculateTimeEnd;
+
     public Long getGroupId() {
         return groupId;
     }
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public Date getCalculateTimeStart() {
+        return calculateTimeStart;
+    }
+
+    public void setCalculateTimeStart(Date calculateTimeStart) {
+        this.calculateTimeStart = calculateTimeStart;
+    }
+
+    public Date getCalculateTimeEnd() {
+        return calculateTimeEnd;
+    }
+
+    public void setCalculateTimeEnd(Date calculateTimeEnd) {
+        this.calculateTimeEnd = calculateTimeEnd;
     }
 
     public Integer getGroupPriority() {

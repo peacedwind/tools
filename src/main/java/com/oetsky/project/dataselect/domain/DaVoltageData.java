@@ -1,4 +1,4 @@
-package com.oetsky.project.datacheck.domain;
+package com.oetsky.project.dataselect.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.oetsky.framework.aspectj.lang.annotation.Excel;
@@ -357,6 +357,15 @@ public class DaVoltageData extends BaseEntity {
     private String aaFundamentalPhaseStatus;
     private String bbFundamentalPhaseStatus;
     private String ccFundamentalPhaseStatus;
+    /**
+     * 采集时间开始
+     */
+    private Date collectTimeStart;
+
+    /**
+     * 采集时间结束
+     */
+    private Date collectTimeEnd;
 
     /**
      * 设置 接收数据ID
@@ -1155,6 +1164,22 @@ public class DaVoltageData extends BaseEntity {
      */
     public void setCcLogicDataQuality(String ccLogicDataQuality) {
         this.ccLogicDataQuality = ccLogicDataQuality;
+    }
+
+    public Date getCollectTimeStart() {
+        return collectTimeStart;
+    }
+
+    public void setCollectTimeStart(Date collectTimeStart) {
+        this.collectTimeStart = collectTimeStart;
+    }
+
+    public Date getCollectTimeEnd() {
+        return collectTimeEnd;
+    }
+
+    public void setCollectTimeEnd(Date collectTimeEnd) {
+        this.collectTimeEnd = collectTimeEnd;
     }
 
     /**

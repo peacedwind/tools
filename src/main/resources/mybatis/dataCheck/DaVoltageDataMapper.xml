@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.datacheck.mapper.CheckHistoryMapper">
+    
+    <resultMap type="com.oetsky.project.datacheck.domain.CheckHistory" id="checkHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="importFileName" column="import_file_name"></result>
+        <result property="importFileUrl" column="import_file_url"></result>
+        <result property="createTime" column="create_time" ></result>
+        <result property="checkStatus" column="check_status"></result>
+        <result property="checkResult" column="check_result"></result>
+        <result property="resultFileUrl" column="result_file_url"></result>
+        <result property="resultFileName" column="result_file_name"></result>
+    </resultMap>
+
+
+    <sql id="selectCheckHistoryVo">
+        select id, import_file_name , import_file_url,create_time,check_status,check_result,result_file_url,result_file_name from check_history
+    </sql>
+
+    <select id="selectById"  resultMap="checkHistoryResult">
+        <include refid="selectCheckHistoryVo"/>
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <select id="list" parameterType="com.oetsky.project.datacheck.domain.CheckHistory" resultMap="checkHistoryResult">
+        <include refid="selectCheckHistoryVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="importFileName != null "> and import_file_name = #{importFileName}</if>
+            <if test="importFileUrl != null "> and import_file_name = #{importFileName}</if>
+            <if test="checkStatus != null "> and check_status = #{checkStatus}</if>
+            <if test="checkResult != null "> and check_result = #{checkResult}</if>
+            <if test="resultFileUrl != null "> and result_file_url = #{resultFileUrl}</if>
+            <if test="resultFileName != null "> and result_file_name = #{resultFileName}</if>
+            <if test="createTimeStart != null">
+                and create_time_start  <![CDATA[ >= ]]> #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null">
+                and create_time_end  <![CDATA[ <= ]]> #{createTimeEnd}
+            </if>
+        </where>
+    </select>
+
+</mapper>

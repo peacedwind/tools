@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.dataselect.mapper.InspectionEventInfoMapper">
+
+    <resultMap type="com.oetsky.project.dataselect.domain.InspectionEventInfo"
+        id="InspectionEventInfoMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="num" column="num" jdbcType="INTEGER"/>
+        <result property="eventType" column="event_type" jdbcType="INTEGER"/>
+        <result property="eventCode" column="event_code" jdbcType="INTEGER"/>
+        <result property="eventName" column="event_name" jdbcType="VARCHAR"/>
+        <result property="eventSource" column="event_source" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="recoveryTime" column="recovery_time" jdbcType="TIMESTAMP"/>
+        <result property="recoveryReason" column="recovery_reason" jdbcType="VARCHAR"/>
+        <result property="sourceCode" column="source_code" jdbcType="VARCHAR"/>
+        <result property="sourceUnitId" column="source_unit_id" jdbcType="VARCHAR"/>
+        <result property="sourceUnitType" column="source_unit_type" jdbcType="VARCHAR"/>
+        <result property="sourceBoardNum" column="source_board_num" jdbcType="VARCHAR"/>
+        <result property="sourceChannelNum" column="source_channel_num" jdbcType="VARCHAR"/>
+        <result property="sourceChannelName" column="source_channel_name" jdbcType="VARCHAR"/>
+        <result property="eventStatus" column="event_status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="exceptionId" column="exception_id" jdbcType="INTEGER"/>
+        <result property="reserved1" column="reserved1" jdbcType="VARCHAR"/>
+        <result property="reserved2" column="reserved2" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InspectionEventInfoMap">
+        select id,
+               num,
+               event_type,
+               event_code,
+               event_name,
+               event_source,
+               start_time,
+               recovery_time,
+               recovery_reason,
+               source_code,
+               source_unit_id,
+               source_unit_type,
+               source_board_num,
+               source_channel_num,
+               source_channel_name,
+               event_status,
+               create_time,
+               exception_id,
+               reserved1,
+               reserved2
+        from inspection_event_info
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <!--查询指定行数据-->
+    <select id="list" resultMap="InspectionEventInfoMap">
+        select
+        IFNULL(t2.id,t1.id) as id, t1.num as num, t1.event_type as event_type, t1.event_code event_code,
+        t1.event_name event_name, t1.event_source event_source, t1.start_time start_time,
+        t1.source_code source_code,
+        t1.source_unit_id source_unit_id,
+        t1.source_unit_type source_unit_type,
+        t1.source_board_num source_board_num,
+        t1.source_channel_num source_channel_num,
+        t1.source_channel_name source_channel_name,
+        t1.event_status event_status, t1.create_time create_time, t1.reserved1 reserved1,
+        t1.reserved2 reserved2,t2.recovery_time as
+        recovery_time,t2.recovery_reason as
+        recovery_reason,
+        iif(t2.recovery_time is null,0,1) as recovery_flag
+        from inspection_event_info t1
+        left join inspection_event_info t2 on t1.id = t2.exception_id
+        <where>
+            t1.exception_id is null
+            <if test="id != null">
+                and t1.id = #{id}
+            </if>
+            <if test="num != null">
+                and t1.num = #{num}
+            </if>
+            <if test="eventType != null">
+                and t1.event_type = #{eventType}
+            </if>
+            <if test="eventCode != null">
+                and t1.event_code = #{eventCode}
+            </if>
+            <if test="eventName != null and eventName != ''">
+                and t1.event_name = #{eventName}
+            </if>
+            <if test="eventSource != null and eventSource != ''">
+                and t1.event_source = #{eventSource}
+            </if>
+            <if test="startTime != null">
+                and t1.start_time = #{startTime}
+            </if>
+            <if test="recoveryTime != null">
+                and t1.recovery_time = #{recoveryTime}
+            </if>
+            <if test="recoveryReason != null and recoveryReason != ''">
+                and t1.recovery_reason = #{recoveryReason}
+            </if>
+            <if test="sourceCode != null and sourceCode != ''">
+                and t1.source_code = #{sourceCode}
+            </if>
+            <if test="sourceUnitId != null">
+                and t1.source_unit_id = #{sourceUnitId}
+            </if>
+            <if test="sourceUnitType != null and sourceUnitType != ''">
+                and t1.source_unit_type = #{sourceUnitType}
+            </if>
+            <if test="sourceBoardNum != null">
+                and t1.source_board_num = #{sourceBoardNum}
+            </if>
+            <if test="sourceChannelNum != null">
+                and t1.source_channel_num = #{sourceChannelNum}
+            </if>
+            <if test="sourceChannelName != null and sourceChannelName != ''">
+                and t1.source_channel_name = #{sourceChannelName}
+            </if>
+            <if test="eventStatus != null">
+                <choose>
+                    <when test="eventStatus == 1">
+                        and t2.exception_id is not null
+                    </when>
+                    <when test="eventStatus == 0">
+                        and t2.exception_id is null
+                    </when>
+                </choose>
+            </if>
+            <if test="createTime != null">
+                and t1.create_time = #{createTime}
+            </if>
+            <if test="reserved1 != null and reserved1 != ''">
+                and t1.reserved1 = #{reserved1}
+            </if>
+            <if test="reserved2 != null and reserved2 != ''">
+                and t1.reserved2 = #{reserved2}
+            </if>
+            <if test="searchStartTime != null and searchEndTime != null">
+                and not(IFNULL(t2.recovery_time,253402271999000) <![CDATA[ < ]]>
+                #{searchStartTime} or t1.start_time <![CDATA[ > ]]>
+                #{searchEndTime})
+            </if>
+            <if test="searchEventTypes != null and  searchEventTypes.length > 0">
+                and t1.event_type in
+                <foreach separator="," collection="searchEventTypes" open="(" close=")"
+                    item="eventType">
+                    #{eventType}
+                </foreach>
+            </if>
+            <if test="startTimeEnd != null">
+                and t1.start_time <![CDATA[ <= ]]> #{startTimeEnd}
+            </if>
+            <if test="recoveryTimeEnd != null">
+                and (t2.recovery_time is null or t2.recovery_time <![CDATA[ <= ]]> #{recoveryTimeEnd})
+            </if>
+        </where>
+        group by t1.id order by recovery_flag,start_time desc,id desc
+
+    </select>
+
+
+
+</mapper>
+

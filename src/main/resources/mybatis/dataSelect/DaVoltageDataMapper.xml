@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oetsky.project.dataselect.mapper.DaVoltageDataMapper">
+    
+    <resultMap type="com.oetsky.project.dataselect.domain.DaVoltageData" id="DaVoltageDataResult">
+        <result property="id"    column="id"    />
+        <result property="boardNum"    column="board_num"    />
+        <result property="boardChannel"    column="board_channel"    />
+        <result property="channelNum"    column="channel_num"    />
+        <result property="collectTime"    column="collect_time"    />
+        <result property="timeType"    column="time_type"    />
+        <result property="aaFundamentalFrequency"    column="aa_fundamental_frequency"    />
+        <result property="aaFundamentalAmplitude"    column="aa_fundamental_amplitude"    />
+        <result property="a3HarmonicAmplitude"    column="a3_harmonic_amplitude"    />
+        <result property="a5HarmonicAmplitude"    column="a5_harmonic_amplitude"    />
+        <result property="aaFundamentalPhase"    column="aa_fundamental_phase"    />
+        <result property="a3HarmonicPhase"    column="a3_harmonic_phase"    />
+        <result property="a5HarmonicPhase"    column="a5_harmonic_phase"    />
+        <result property="bbFundamentalFrequency"    column="bb_fundamental_frequency"    />
+        <result property="bbFundamentalAmplitude"    column="bb_fundamental_amplitude"    />
+        <result property="b3HarmonicAmplitude"    column="b3_harmonic_amplitude"    />
+        <result property="b5HarmonicAmplitude"    column="b5_harmonic_amplitude"    />
+        <result property="bbFundamentalPhase"    column="bb_fundamental_phase"    />
+        <result property="b3HarmonicPhase"    column="b3_harmonic_phase"    />
+        <result property="b5HarmonicPhase"    column="b5_harmonic_phase"    />
+        <result property="ccFundamentalFrequency"    column="cc_fundamental_frequency"    />
+        <result property="ccFundamentalAmplitude"    column="cc_fundamental_amplitude"    />
+        <result property="c3HarmonicAmplitude"    column="c3_harmonic_amplitude"    />
+        <result property="c5HarmonicAmplitude"    column="c5_harmonic_amplitude"    />
+        <result property="ccFundamentalPhase"    column="cc_fundamental_phase"    />
+        <result property="c3HarmonicPhase"    column="c3_harmonic_phase"    />
+        <result property="c5HarmonicPhase"    column="c5_harmonic_phase"    />
+        <result property="zeroSequenceVoltageImbalance"    column="zero_sequence_voltage_imbalance"    />
+        <result property="negativeSequenceVoltageImbalance"    column="negative_sequence_voltage_imbalance"    />
+        <result property="status"    column="status"    />
+        <result property="channelLevel"    column="channel_level"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="column1"    column="column1"    />
+        <result property="column2"    column="column2"    />
+        <result property="column3"    column="column3"    />
+        <result property="isSupplement"    column="is_supplement"    />
+        <result property="aaBoardSortNum"    column="aa_board_sort_num"    />
+        <result property="bbBoardSortNum"    column="bb_board_sort_num"    />
+        <result property="ccBoardSortNum"    column="cc_board_sort_num"    />
+        <result property="aaClockStatus"    column="aa_clock_status"    />
+        <result property="bbClockStatus"    column="bb_clock_status"    />
+        <result property="ccClockStatus"    column="cc_clock_status"    />
+        <result property="aaLogicDataQuality"    column="aa_logic_data_quality"    />
+        <result property="bbLogicDataQuality"    column="bb_logic_data_quality"    />
+        <result property="ccLogicDataQuality"    column="cc_logic_data_quality"    />
+    </resultMap>
+
+
+    <sql id="selectDaVoltageDataVo">
+        select id, board_num, board_channel, channel_num, collect_time, time_type, aa_fundamental_frequency, aa_fundamental_amplitude, a3_harmonic_amplitude, a5_harmonic_amplitude, aa_fundamental_phase, a3_harmonic_phase, a5_harmonic_phase, bb_fundamental_frequency, bb_fundamental_amplitude, b3_harmonic_amplitude, b5_harmonic_amplitude, bb_fundamental_phase, b3_harmonic_phase, b5_harmonic_phase, cc_fundamental_frequency, cc_fundamental_amplitude, c3_harmonic_amplitude, c5_harmonic_amplitude, cc_fundamental_phase, c3_harmonic_phase, c5_harmonic_phase, zero_sequence_voltage_imbalance, negative_sequence_voltage_imbalance, status, channel_level, create_time, column1, column2, column3, is_supplement, aa_board_sort_num, bb_board_sort_num, cc_board_sort_num, aa_clock_status, bb_clock_status, cc_clock_status, aa_logic_data_quality, bb_logic_data_quality, cc_logic_data_quality from da_voltage_data
+    </sql>
+
+    <select id="selectDaVoltageDataById"  resultMap="DaVoltageDataResult">
+        <include refid="selectDaVoltageDataVo"/>
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <select id="selectDaVoltageDataList" parameterType="com.oetsky.project.dataselect.domain.DaVoltageData" resultMap="DaVoltageDataResult">
+        <include refid="selectDaVoltageDataVo"/>
+        <where>  
+            <if test="boardNum != null "> and board_num = #{boardNum}</if>
+            <if test="boardChannel != null "> and board_channel = #{boardChannel}</if>
+            <if test="channelNum != null "> and channel_num = #{channelNum}</if>
+            <if test="timeType != null "> and time_type = #{timeType}</if>
+            <if test="aaFundamentalFrequency != null "> and aa_fundamental_frequency = #{aaFundamentalFrequency}</if>
+            <if test="aaFundamentalAmplitude != null "> and aa_fundamental_amplitude = #{aaFundamentalAmplitude}</if>
+            <if test="a3HarmonicAmplitude != null "> and a3_harmonic_amplitude = #{a3HarmonicAmplitude}</if>
+            <if test="a5HarmonicAmplitude != null "> and a5_harmonic_amplitude = #{a5HarmonicAmplitude}</if>
+            <if test="aaFundamentalPhase != null "> and aa_fundamental_phase = #{aaFundamentalPhase}</if>
+            <if test="a3HarmonicPhase != null "> and a3_harmonic_phase = #{a3HarmonicPhase}</if>
+            <if test="a5HarmonicPhase != null "> and a5_harmonic_phase = #{a5HarmonicPhase}</if>
+            <if test="bbFundamentalFrequency != null "> and bb_fundamental_frequency = #{bbFundamentalFrequency}</if>
+            <if test="bbFundamentalAmplitude != null "> and bb_fundamental_amplitude = #{bbFundamentalAmplitude}</if>
+            <if test="b3HarmonicAmplitude != null "> and b3_harmonic_amplitude = #{b3HarmonicAmplitude}</if>
+            <if test="b5HarmonicAmplitude != null "> and b5_harmonic_amplitude = #{b5HarmonicAmplitude}</if>
+            <if test="bbFundamentalPhase != null "> and bb_fundamental_phase = #{bbFundamentalPhase}</if>
+            <if test="b3HarmonicPhase != null "> and b3_harmonic_phase = #{b3HarmonicPhase}</if>
+            <if test="b5HarmonicPhase != null "> and b5_harmonic_phase = #{b5HarmonicPhase}</if>
+            <if test="ccFundamentalFrequency != null "> and cc_fundamental_frequency = #{ccFundamentalFrequency}</if>
+            <if test="ccFundamentalAmplitude != null "> and cc_fundamental_amplitude = #{ccFundamentalAmplitude}</if>
+            <if test="c3HarmonicAmplitude != null "> and c3_harmonic_amplitude = #{c3HarmonicAmplitude}</if>
+            <if test="c5HarmonicAmplitude != null "> and c5_harmonic_amplitude = #{c5HarmonicAmplitude}</if>
+            <if test="ccFundamentalPhase != null "> and cc_fundamental_phase = #{ccFundamentalPhase}</if>
+            <if test="c3HarmonicPhase != null "> and c3_harmonic_phase = #{c3HarmonicPhase}</if>
+            <if test="c5HarmonicPhase != null "> and c5_harmonic_phase = #{c5HarmonicPhase}</if>
+            <if test="zeroSequenceVoltageImbalance != null "> and zero_sequence_voltage_imbalance = #{zeroSequenceVoltageImbalance}</if>
+            <if test="negativeSequenceVoltageImbalance != null "> and negative_sequence_voltage_imbalance = #{negativeSequenceVoltageImbalance}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="channelLevel != null "> and channel_level = #{channelLevel}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="column1 != null  and column1 != ''"> and column1 = #{column1}</if>
+            <if test="column2 != null  and column2 != ''"> and column2 = #{column2}</if>
+            <if test="column3 != null  and column3 != ''"> and column3 = #{column3}</if>
+            <if test="isSupplement != null "> and is_supplement = #{isSupplement}</if>
+            <if test="aaBoardSortNum != null "> and aa_board_sort_num = #{aaBoardSortNum}</if>
+            <if test="bbBoardSortNum != null "> and bb_board_sort_num = #{bbBoardSortNum}</if>
+            <if test="ccBoardSortNum != null "> and cc_board_sort_num = #{ccBoardSortNum}</if>
+            <if test="aaClockStatus != null "> and aa_clock_status = #{aaClockStatus}</if>
+            <if test="bbClockStatus != null "> and bb_clock_status = #{bbClockStatus}</if>
+            <if test="ccClockStatus != null "> and cc_clock_status = #{ccClockStatus}</if>
+            <if test="aaLogicDataQuality != null  and aaLogicDataQuality != ''"> and aa_logic_data_quality = #{aaLogicDataQuality}</if>
+            <if test="bbLogicDataQuality != null  and bbLogicDataQuality != ''"> and bb_logic_data_quality = #{bbLogicDataQuality}</if>
+            <if test="ccLogicDataQuality != null  and ccLogicDataQuality != ''"> and cc_logic_data_quality = #{ccLogicDataQuality}</if>
+            <if test="collectTimeStart != null">
+                and collect_time <![CDATA[ >= ]]>  #{collectTimeStart}
+            </if>
+            <if test="collectTimeEnd != null">
+                and collect_time <![CDATA[ <= ]]>  #{collectTimeEnd}
+            </if>
+        </where>
+    </select>
+
+</mapper>
