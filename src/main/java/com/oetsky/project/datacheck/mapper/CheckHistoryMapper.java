@@ -24,4 +24,10 @@ public interface CheckHistoryMapper {
      * @return
      */
     CheckHistory selectById(Integer id);
+
+    void save(CheckHistory checkHistory);
+
+
+    void updateById(CheckHistory checkHistory);
+
 }

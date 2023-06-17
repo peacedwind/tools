@@ -1,5 +1,7 @@
 package com.oetsky.project.datacheck.domain;
 
+import com.oetsky.project.enums.CheckResultEnum;
+import com.oetsky.project.enums.CheckStatusEnum;
 import java.util.Date;
 
 /**
@@ -108,5 +110,11 @@ public class CheckHistory {
 
     public void setResultFileName(String resultFileName) {
         this.resultFileName = resultFileName;
+    }
+
+    public void defaultValue(){
+        setCreateTime(new Date());
+        setCheckStatus(CheckStatusEnum.ING.getCode());
+        setCheckResult(CheckResultEnum.OK.getCode());
     }
 }

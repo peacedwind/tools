@@ -212,8 +212,6 @@ public class DvSerialSetting extends BaseEntity {
     public Integer getInterfaceStatus() {
         return interfaceStatus;
     }
-/** 设置 创建时间 */
-/** 设置 更新时间 */
     /**
      * 设置 备注
      */

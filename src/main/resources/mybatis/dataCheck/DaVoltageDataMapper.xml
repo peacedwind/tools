@@ -46,4 +46,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into check_history (import_file_name, import_file_url, create_time, check_status, check_result,
+                           result_file_url, result_file_name)
+                values (#{importFileName},#{importFileUrl},#{createTime},#{checkStatus},#{checkResult}
+                        ,#{resultFileUrl},#{resultFileName});
+    </insert>
+
+    <update id="updateById">
+        update check_history
+            set import_file_name = #{importFileName}
+                , import_file_url = #{importFileUrl}
+            , create_time = #{createTime}
+                ,check_status = #{checkStatus}
+                ,check_result = #{checkResult}
+                ,result_file_url = #{resultFileUrl}
+                ,result_file_name = #{resultFileName}
+                where id = #{id}
+    </update>
+
 </mapper>

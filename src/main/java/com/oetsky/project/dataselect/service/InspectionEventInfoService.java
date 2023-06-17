@@ -41,4 +41,6 @@ public interface InspectionEventInfoService {
 
 
     void createData();
+
+    List<InspectionEventInfo> listByCreateTime(Date start, Date end);
 }

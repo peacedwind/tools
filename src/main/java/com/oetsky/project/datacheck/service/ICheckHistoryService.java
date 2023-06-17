@@ -2,6 +2,7 @@ package com.oetsky.project.datacheck.service;
 
 import com.oetsky.project.datacheck.domain.CheckHistory;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @description:
@@ -17,4 +18,7 @@ public interface ICheckHistoryService {
      */
     List<CheckHistory> list(CheckHistory checkHistory);
 
+    void importCheck(Integer checkType, MultipartFile file) throws Exception;
+
+    CheckHistory selectById(Integer id);
 }

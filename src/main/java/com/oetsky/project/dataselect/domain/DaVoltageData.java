@@ -1,10 +1,14 @@
 package com.oetsky.project.dataselect.domain;
 
+import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.oetsky.framework.aspectj.lang.annotation.Excel;
 import com.oetsky.framework.web.domain.BaseEntity;
+import com.oetsky.project.constants.DIffConstants;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -1214,5 +1218,48 @@ public class DaVoltageData extends BaseEntity {
 
     public void setHumidity(BigDecimal humidity) {
         this.humidity = humidity;
+    }
+
+    public String getDiffInfo(DaVoltageData other){
+        if (other == null){
+            return String.format(DIffConstants.LOST);
+        }
+        List<String> res = new ArrayList<>();
+        //基波频率
+        if (!this.aaFundamentalFrequency.equals(other.aaFundamentalFrequency)) {
+            res.add("基波频率A不一致");
+        }
+        if (!this.bbFundamentalFrequency.equals(other.bbFundamentalFrequency)) {
+            res.add("基波频率B不一致");
+        }
+        if (!this.ccFundamentalFrequency.equals(other.ccFundamentalFrequency)) {
+            res.add("基波频率C不一致");
+        }
+        //基波幅值
+        if (!this.aaFundamentalAmplitude.equals(other.aaFundamentalAmplitude)) {
+            res.add("基波幅值A不一致");
+        }
+        if (!this.bbFundamentalFrequency.equals(other.bbFundamentalFrequency)) {
+            res.add("基波幅值B不一致");
+        }
+        if (!this.ccFundamentalFrequency.equals(other.ccFundamentalFrequency)) {
+            res.add("基波幅值C不一致");
+        }
+        //基波相位
+        if (!this.aaFundamentalPhase.equals(other.aaFundamentalPhase)){
+            res.add("基波相位A不一致");
+        }
+        if (!this.bbFundamentalPhase.equals(other.bbFundamentalPhase)){
+            res.add("基波相位B不一致");
+        }
+        if (!this.ccFundamentalPhase.equals(other.ccFundamentalPhase)){
+            res.add("基波相位C不一致");
+        }
+        return String.join(",\n",res);
+    }
+
+
+    public String getKey(){
+        return String.format("%s_%d",DateUtil.formatDateTime(this.collectTime),this.channelNum);
     }
 }

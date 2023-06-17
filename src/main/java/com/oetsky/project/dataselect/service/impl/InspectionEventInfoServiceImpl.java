@@ -213,4 +213,9 @@ public class InspectionEventInfoServiceImpl implements InspectionEventInfoServic
         Integer count = this.inspectionEventInfoMapper.countDataByDate(date,DateUtil.offsetDay(date,1));
         return count != null && count > 0;
     }
+
+    @Override
+    public List<InspectionEventInfo> listByCreateTime(Date start, Date end) {
+        return inspectionEventInfoMapper.listByCreateTime( start,  end);
+    }
 }

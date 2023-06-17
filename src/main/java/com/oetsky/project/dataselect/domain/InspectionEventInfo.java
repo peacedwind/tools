@@ -2,9 +2,12 @@ package com.oetsky.project.dataselect.domain;
 
 import cn.hutool.core.date.DateUtil;
 import com.oetsky.framework.aspectj.lang.annotation.Excel;
+import com.oetsky.project.constants.DIffConstants;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 装置自诊断事件表(InspectionEventInfo)实体类
@@ -499,5 +502,42 @@ public class InspectionEventInfo implements Serializable {
     public boolean isChannelNumIsNull(){
         return sourceChannelNum == null;
     }
+
+    public String getDiffInfo(InspectionEventInfo other){
+        if (other == null){
+            return String.format(DIffConstants.LOST);
+        }
+
+        List<String> res = new ArrayList<>();
+        //类型
+        if (!this.eventType.equals(other.eventType)){
+            res.add("类型不一致");
+        }
+        //事件编号
+        if (!this.eventCode.equals(other.eventCode)){
+            res.add("事件编号不一致");
+        }
+        //事件来源
+        if (!this.eventSource.equals(other.eventSource)){
+            res.add("事件来源不一致");
+        }
+        //开始时间
+        if (!this.startTime.equals(other.startTime)){
+            res.add("开始时间不一致");
+        }
+        //结束时间
+        if (!this.recoveryTime.equals(other.recoveryTime)){
+            res.add("结束时间不一致");
+        }
+        return String.join(",\n",res);
+    }
+
+
+    public String getKey(){
+        return String.valueOf(this.id);
+    }
+
+
+
 }
 

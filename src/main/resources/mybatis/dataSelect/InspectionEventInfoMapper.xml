@@ -192,5 +192,37 @@
                 and start_time <![CDATA[ < ]]> #{end}
     </select>
 
+
+
+    <select id="listByCreateTime" resultMap="InspectionEventInfoMap">
+        select
+        IFNULL(t1.id,t2.id) as id, t1.num as num, t1.event_type as event_type, t1.event_code event_code,
+        t1.event_name event_name, t1.event_source event_source, t1.start_time start_time,
+        t1.source_code source_code,
+        t1.source_unit_id source_unit_id,
+        t1.source_unit_type source_unit_type,
+        t1.source_board_num source_board_num,
+        t1.source_channel_num source_channel_num,
+        t1.source_channel_name source_channel_name,
+        t1.event_status event_status, t1.create_time create_time, t1.reserved1 reserved1,
+        t1.reserved2 reserved2,t2.recovery_time as
+        recovery_time,t2.recovery_reason as
+        recovery_reason,
+        iif(t2.recovery_time is null,0,1) as recovery_flag
+        from inspection_event_info t1
+        left join inspection_event_info t2 on t1.id = t2.exception_id
+        <where>
+            t1.exception_id is null
+            <if test="start != null">
+                and t1.create_time <![CDATA[ >= ]]> #{start}
+            </if>
+            <if test="end != null">
+                and t1.create_time <![CDATA[ <= ]]> #{end}
+            </if>
+        </where>
+        group by t1.id order by recovery_flag,start_time desc,id desc
+
+    </select>
+
 </mapper>
 

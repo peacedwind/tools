@@ -1,11 +1,15 @@
 package com.oetsky.project.dataselect.domain;
 
+import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.oetsky.framework.aspectj.lang.annotation.Excel;
 import com.oetsky.framework.web.domain.BaseEntity;
+import com.oetsky.project.constants.DIffConstants;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -31,21 +35,20 @@ public class ErrVoltageError extends BaseEntity
     private String channelName ;
     /** 计算时间 */
 
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "计算时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date calculateTime;
 
     /** A比差 */
-    @Excel(name = "A比差")
+    @Excel(name = "A比差(%)")
     private BigDecimal aaRatioError;
 
     /** B比差 */
-    @Excel(name = "B比差")
+    @Excel(name = "B比差(%)")
     private BigDecimal bbRatioError;
 
     /** C比差 */
-    @Excel(name = "C比差")
+    @Excel(name = "C比差(%)")
     private BigDecimal ccRatioError;
 
     /** A比差方差 */
@@ -61,15 +64,15 @@ public class ErrVoltageError extends BaseEntity
     private BigDecimal ccRatioVariance;
 
     /** A角差 */
-    @Excel(name = "A角差")
+    @Excel(name = "A角差(%)")
     private BigDecimal aaAngleError;
 
     /** B角差 */
-    @Excel(name = "B角差")
+    @Excel(name = "B角差(%)")
     private BigDecimal bbAngleError;
 
     /** C角差 */
-    @Excel(name = "C角差")
+    @Excel(name = "C角差(%)")
     private BigDecimal ccAngleError;
 
     /** A角差方差 */
@@ -506,5 +509,43 @@ public class ErrVoltageError extends BaseEntity
             .append("channelLevel", getChannelLevel())
             .append("createTime", getCreateTime())
             .toString();
+    }
+
+    public String getDiffInfo(ErrVoltageError other){
+        if (other == null){
+            return String.format(DIffConstants.LOST);
+        }
+        List<String> res = new ArrayList<>();
+        //状态字
+        if (!this.calculateStatus.equals(other.calculateStatus)) {
+            res.add("基波频率A不一致");
+        }
+        //比差
+        if (!this.aaRatioError.equals(other.aaRatioError)) {
+            res.add("A比差不一致");
+        }
+        if (!this.bbRatioError.equals(other.bbRatioError)) {
+            res.add("B比差不一致");
+        }
+        if (!this.ccRatioError.equals(other.ccRatioError)) {
+            res.add("C比差不一致");
+        }
+        // 角差
+        if (!this.aaAngleError.equals(other.aaAngleError)) {
+            res.add("A角差不一致");
+        }
+        if (!this.bbAngleError.equals(other.bbAngleError)) {
+            res.add("B角差不一致");
+        }
+        if (!this.ccAngleError.equals(other.ccAngleError)) {
+            res.add("C角差不一致");
+        }
+
+        return String.join(",\n",res);
+    }
+
+
+    public String getKey(){
+        return String.format("%s_%d", DateUtil.formatDateTime(this.calculateTime),this.channelNum);
     }
 }

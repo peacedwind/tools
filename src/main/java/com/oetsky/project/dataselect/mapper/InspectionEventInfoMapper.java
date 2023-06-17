@@ -34,5 +34,7 @@ public interface InspectionEventInfoMapper {
     void insertBatch(@Param("entities") List<InspectionEventInfo> entities);
 
     Integer countDataByDate(@Param("start")Date start,@Param("end")Date end);
+
+    List<InspectionEventInfo> listByCreateTime(@Param("start") Date start,@Param("end") Date end);
 }
 
