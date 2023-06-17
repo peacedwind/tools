@@ -1,4 +1,4 @@
-package com.oetsky.project.util;
+package com.oetsky.project.serialsetting.serial.domain;
 
 
 /**
@@ -17,7 +17,25 @@ public class CommandFrameLog {
      */
     private String channelNum ;
 
+    private String phase;
 
+    public Integer getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Integer channel) {
+        this.channel = channel;
+    }
+
+    private Integer channel ;
+
+    public String getPhase() {
+        return phase;
+    }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
     /**
      * 获取 日期
      *

@@ -160,7 +160,22 @@
         group by t1.id order by recovery_flag,start_time desc,id desc
 
     </select>
-
+    <select id="selectInspectionEventInfoListBy"
+            resultType="com.oetsky.project.serialsetting.serial.domain.EventInfoData">
+        SELECT id,event_source,source_code,event_code,source_board_num,
+        source_channel_num channel_num ,
+        '' meter_addr,
+        start_time,
+        recovery_time end_time,
+        source_code interface_type,
+        event_code error_type,
+        create_time from inspection_event_info
+        <where>
+            <if test="channelNum != null "> and source_channel_num = #{channelNum}</if>
+            <if test="createTime != null "> and create_time BETWEEN #{createTime} and  ADDTIME(#{createTime} , '00:15:00') </if>
+        </where>
+        ORDER BY event_code asc,create_time desc,recovery_time desc
+    </select>
     <select id="selectMaxId" resultType="integer">
         select max(id) from inspection_event_info;
     </select>

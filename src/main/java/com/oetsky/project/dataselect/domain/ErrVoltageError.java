@@ -157,6 +157,36 @@ public class ErrVoltageError extends BaseEntity
      */
     private Date calculateTimeEnd;
 
+
+    public Integer getErrorCalculateStatus() {
+        return errorCalculateStatus;
+    }
+
+    public void setErrorCalculateStatus(Integer errorCalculateStatus) {
+        this.errorCalculateStatus = errorCalculateStatus;
+    }
+
+    private Integer errorCalculateStatus;
+    private String dataStatus;
+
+    public String getDataStatus() {
+        return dataStatus;
+    }
+
+    public void setDataStatus(String dataStatus) {
+        this.dataStatus = dataStatus;
+    }
+
+    public Integer getDataErrorStatus() {
+        return dataErrorStatus;
+    }
+
+    public void setDataErrorStatus(Integer dataErrorStatus) {
+        this.dataErrorStatus = dataErrorStatus;
+    }
+
+    private Integer dataErrorStatus;
+
     public Long getGroupId() {
         return groupId;
     }

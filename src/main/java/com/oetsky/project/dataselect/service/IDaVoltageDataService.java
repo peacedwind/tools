@@ -2,8 +2,11 @@ package com.oetsky.project.dataselect.service;
 
 
 import com.oetsky.project.dataselect.domain.DaVoltageData;
+
+import java.util.Date;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 电压互感器采集数据Service接口
@@ -28,6 +31,14 @@ public interface IDaVoltageDataService {
      */
     List<DaVoltageData> selectDaVoltageDataList(DaVoltageData daVoltageData);
 
+    /**
+     * 查看响应终端的采集数据
+     * @param dataTimeList
+     * @param collectTime1
+     * @param channel
+     * @return
+     */
+    Map<Date, DaVoltageData> selectSampleDataExitDataList(List<Date> dataTimeList, Date collectTime1, Integer channel);
 
     /**
      * 判断当天是否有数据
@@ -55,4 +66,10 @@ public interface IDaVoltageDataService {
      */
     void createData();
 
+    /**
+     *
+     * @param map
+     * @return
+     */
+    DaVoltageData selectSampleDataByRecently(Map<String, Object> map);
 }

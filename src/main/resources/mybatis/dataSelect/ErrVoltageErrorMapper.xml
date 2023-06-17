@@ -82,6 +82,30 @@
             </if>
         </where>
     </select>
+    <select id="selectVoltageCalculateByRecentlyList"
+            resultType="com.oetsky.project.dataselect.domain.ErrVoltageError">
+        <include refid="selectErrVoltageErrorVo"/>
+        <where>
+            <if test="measureTime != null  ">AND
+                date_format(calculate_time,'%Y-%m-%d %H:%i') &lt;= date_format(#{measureTime},'%Y-%m-%d %H:%i')
+            </if>
+            <if test="channelNum != null  ">AND channel_num = #{channelNum}</if>
+        </where>
+        ORDER BY calculate_time DESC
+        limit 2
+    </select>
+    <select id="selectVoltageCalculateByRecently"
+            resultType="com.oetsky.project.dataselect.domain.ErrVoltageError">
+        <include refid="selectErrVoltageErrorVo"/>
+        <where>
+            <if test="measureTime != null  ">AND
+                date_format(calculate_time,'%Y-%m-%d %H:%i') &lt;= date_format(#{measureTime},'%Y-%m-%d %H:%i')
+            </if>
+            <if test="channelNum != null  ">AND channel_num = #{channelNum}</if>
+        </where>
+        ORDER BY calculate_time DESC
+        limit 1
+    </select>
 
     <insert id="batchErrVoltageErrorList">
         insert or replace into err_voltage_error( channel_num , calculate_time ,

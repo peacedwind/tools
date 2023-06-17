@@ -2,6 +2,8 @@ package com.oetsky.project.dataselect.service;
 
 
 import com.oetsky.project.dataselect.domain.InspectionEventInfo;
+import com.oetsky.project.serialsetting.serial.domain.EventInfoData;
+
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +31,12 @@ public interface InspectionEventInfoService {
      */
     List<InspectionEventInfo> list(InspectionEventInfo inspectionEventInfo);
 
+    /**
+     *
+     * @param eventInfo
+     * @return
+     */
+    List<EventInfoData> selectInspectionEventInfoListBy(EventInfoData eventInfo);
 
     /**
      * 生成事件list
